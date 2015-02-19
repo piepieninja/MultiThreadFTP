@@ -28,10 +28,10 @@ class FTPServer {
 		
 		try {
 			//starts thread for dealing with normal commands
-			nThread = new ClientManager(nport);
+			nThread = new Thread(new ClientManager(nport));
 			nThread.start();
 			//starts thread for dealing with the terminiate command
-			tThread = new TerminateManager(tport);
+			tThread = new Thread(new TerminateManager(tport));
 			tThread.start();
 		} catch (Exception e) {
 			System.out.printf("There was an error\n");
@@ -42,20 +42,38 @@ class FTPServer {
 
 }
 
-
-class ClientManager extends Thread {
+class ClientManager implements Runnable {
 	private ServerSocket normalSocket;
 
 	public ClientManager(int nport) {
 		System.out.printf("ClientManager created\n");
+
+		try {
+			normalSocket = new ServerSocket(nport);
+		} catch (Exception e) {
+			System.out.printf("There was an error creating the socket");
+		}
+	}
+
+	public void run() {
+
 	}
 }
 
-
-class TerminateManager extends Thread {
+class TerminateManager implements Runnable {
 	private ServerSocket terminateSocket;
 
 	public TerminateManager(int tport) {
 		System.out.printf("TerminateManager created\n");
+
+		try {
+			terminateSocket = new ServerSocket(tport);
+		} catch (Exception e) {
+			System.out.printf("There was an error creating the socket");
+		}
+	}
+
+	public void run() {
+
 	}
 }
