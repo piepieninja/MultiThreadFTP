@@ -4,8 +4,6 @@ import java.net.*;
 
 public class MyFtpServer {
 
-	private Thread nThread, tThread;
-
 	public static void main (String[] args) {
 		//////Deal with command line args	
 		int nport = 5555;
@@ -44,36 +42,39 @@ class FTPServer {
 
 class ClientManager implements Runnable {
 	private ServerSocket normalSocket;
+	private Socket clientSocket;
+	private int port;
 
 	public ClientManager(int nport) {
+		this.port = nport;
 		System.out.printf("ClientManager created\n");
-
-		try {
-			normalSocket = new ServerSocket(nport);
-		} catch (Exception e) {
-			System.out.printf("There was an error creating the socket");
-		}
 	}
 
 	public void run() {
-
+		try {
+			normalSocket = new ServerSocket(port);
+			clientSocket = normalSocket.accept();
+		} catch (Exception e) {
+			System.out.printf("There was an error creating the socket");
+		}
 	}
 }
 
 class TerminateManager implements Runnable {
 	private ServerSocket terminateSocket;
+	private int port;
 
 	public TerminateManager(int tport) {
+		this.port = tport;
 		System.out.printf("TerminateManager created\n");
-
-		try {
-			terminateSocket = new ServerSocket(tport);
-		} catch (Exception e) {
-			System.out.printf("There was an error creating the socket");
-		}
 	}
 
 	public void run() {
+		try {
+			terminateSocket = new ServerSocket(port);
 
+		} catch (Exception e) {
+			System.out.printf("There was an error creating the socket");
+		}
 	}
 }
