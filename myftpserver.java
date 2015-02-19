@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
-public class myftpserver {
+public class MyFtpServer {
 
 	private Thread nThread, tThread;
 
