@@ -51,10 +51,10 @@ public class MyFtpClient {
 						System.out.println("ERROR: invalid command");
 						break;
 					case 0:
-						terminateIn.println("terminate");
+						terminateOut.println("terminate");
 						break;
 					case 1:
-						normalIn.println(userInput);
+						normalOut.println(userInput);
 						break;
 					default:
 						System.err.println("error parsing input");
@@ -67,12 +67,20 @@ public class MyFtpClient {
 		}
 	}
 
-	public short parseInput(){
+	public short parseInput(String str){
 		/*
 		 * -1 : invalid command
 		 *  0 : kill the session
 		 *  1 : valid command
 		 */
+		// quick check
+		if (!str[0] == 'g' || !str[0] == 'p' || !str[0] == 'd' || !str[0] == 'l' || !str[0] == 'm' || !str[0] == 'p' || !str[0] == 'q' || !str[0] == 't')
+			return -1
+		// long check
+		if (!str.contains("get") || !str.contains("put") || !str.contains("delete") || !str.contains("ls") || !str.contains("mkdir") || !str.contains("pwd") || !str.contains("quit") || !str.contains("terminate")) 
+			return -1;
+		if (str.equals("terminate"))
+			return 0;
 		return 1;
 	}
 
