@@ -1,10 +1,10 @@
 all:
-	javac myftpserver.java
-	javac myftpclient.java
+	javac MyFtpServer.java
+	javac MyFtpClient.java
 server:
-	javac myftpserver.java
+	javac MyFtpServer.java
 client:
-	javac myftpclient.java
+	javac MyFtpClient.java
 clean:
 	rm *.class
 	rm *~

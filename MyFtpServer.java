@@ -58,7 +58,7 @@ class ClientManager implements Runnable {
 
 			while(true){
 				clientSocket = normalSocket.accept();
-				(new Thread(new ClientThread())).start();
+				(new Thread(new ClientThread(clientSocket))).start();
 			}
 
 		} catch (Exception e) {
@@ -89,20 +89,32 @@ class TerminateManager implements Runnable {
 
 class ClientThread implements Runnable {
 	Socket mySocket;
+	BufferedReader is;
+    PrintStream os;
 
 	public ClientThread(Socket clientSocket) {
 		this.mySocket = clientSocket;
 
 		try {
-
-
+			is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	    	os = new PrintStream(clientSocket.getOutputStream());
 		} catch (IOException ex) {
-			
+			System.out.println(ex);
 		}
 	}
 
 	public void run() {
-		System.out.println("Client created");
+		String input;
+
+		try {
+			while (true) {
+				input = is.readLine();
+				os.println(input);
+			}
+		} catch (IOException ex) {
+			System.out.println(ex);
+		}
+		
 	}
 
 }
