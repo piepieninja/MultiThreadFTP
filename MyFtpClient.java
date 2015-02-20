@@ -41,16 +41,35 @@ public class MyFtpClient {
 
 		) {
 			String userInput;
+			short sh;
 			while(true) {
 				System.out.print("myftp>");
 				userInput = stdIn.readLine();
+				sh = parseInput(userInput);
+				switch (sh) {
+					case -1:
+					break;
+					case 0:
+					break;
+					case 1:
+					break:
+					default:
+					break;
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("There was an error creating the sockets");
 		}
 	}
 
-	
+	public short parseInput(){
+		/*
+		 * -1 : kill the session
+		 *  0 : invalic command
+		 *  1 : valid command
+		 */
+		return 1
+	}
 
 	public static void printHello() {
 		System.out.println(" ___ _____ ___   ___ ___ _____   _____ ___ \n| __|_   _| _ \\ / __| __| _ \\ \\ / / __| _ \\\n| _|  | | |  _/ \\__ \\ _||   /\\ V /| _||   /\n|_|   |_| |_|   |___/___|_|_\\ \\_/ |___|_|_\\\n                                           ");
