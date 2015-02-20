@@ -51,12 +51,20 @@ class ClientManager implements Runnable {
 	}
 
 	public void run() {
+
 		try {
+			// creates the socket for accepting clients
 			normalSocket = new ServerSocket(port);
-			clientSocket = normalSocket.accept();
+
+			while(true){
+				clientSocket = normalSocket.accept();
+				(new Thread(new ClientThread())).start();
+			}
+
 		} catch (Exception e) {
 			System.out.printf("There was an error creating the socket");
 		}
+		
 	}
 }
 
@@ -78,3 +86,27 @@ class TerminateManager implements Runnable {
 		}
 	}
 }
+
+class ClientThread implements Runnable {
+	Socket mySocket;
+
+	public ClientThread(Socket clientSocket) {
+		this.mySocket = clientSocket;
+
+		try {
+
+
+		} catch (IOException ex) {
+			
+		}
+	}
+
+	public void run() {
+		System.out.println("Client created");
+	}
+
+}
+
+
+
+
