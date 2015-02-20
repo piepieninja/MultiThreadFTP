@@ -77,7 +77,7 @@ public class MyFtpClient {
 		//if (!(str.charAt(0) == 'g') || !(str.charAt(0) == 'p') || !(str.charAt(0) == 'd') || !(str.charAt(0) == 'l') || !(str.charAt(0) == 'm') || !(str.charAt(0) == 'p') || !(str.charAt(0) == 'q') || !(str.charAt(0) == 't'))
 		//	return -1;
 		// long check
-		if (!str.contains("get") || !str.contains("put") || !str.contains("delete") || !str.contains("ls") || !str.contains("mkdir") || !str.contains("pwd") || !str.contains("quit") || !str.contains("terminate")) 
+		if (str.contains("get") || str.contains("put") || str.contains("delete") || str.contains("ls") || str.contains("mkdir") || str.contains("pwd") || str.contains("quit") || str.contains("terminate")) 
 			return -1;
 		if (str.equals("terminate"))
 			return 0;
