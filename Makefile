@@ -6,7 +6,6 @@ server:
 client:
 	javac MyFtpClient.java
 clean:
-	rm *.class
 	rm *~
 	clear
 

@@ -73,7 +73,7 @@ public class MyFtpClient {
 		 *  0 : kill the session
 		 *  1 : valid command
 		 */
-		return 1
+		return 1;
 	}
 
 	public static void printHello() {
