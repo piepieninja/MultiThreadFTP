@@ -88,6 +88,7 @@ class TerminateManager implements Runnable {
 }
 
 class ClientThread implements Runnable {
+	final Runtime rt = Runtime.getRuntime();
 	Socket mySocket;
 	BufferedReader is;
     PrintStream os;
@@ -119,11 +120,11 @@ class ClientThread implements Runnable {
 
 	private void parseCommand(String input) {
 		if (input.equals("delete")) {
-
+			rt.exec(""); // << add file to delete
 		} else if (input.equals("ls")) {
 
 		} else if (input.equals("mkdir")) {
-
+			rt.exec(""); // << add directory to make
 		} else if (input.equals("pwd")) {
 
 		} else if (input.equals("quit")) {
