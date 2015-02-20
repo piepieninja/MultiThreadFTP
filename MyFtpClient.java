@@ -48,14 +48,18 @@ public class MyFtpClient {
 				sh = parseInput(userInput);
 				switch (sh) {
 					case -1:
-						
-					break;
+						System.out.println("ERROR: invalid command");
+						break;
 					case 0:
-					break;
+						terminateIn.println("terminate");
+						break;
 					case 1:
-					break:
+						normalIn.println(userInput);
+						break;
 					default:
-					break;
+						System.err.println("error parsing input");
+						System.exit(1);
+						break;
 				}
 			}
 		} catch (Exception e) {
@@ -65,8 +69,8 @@ public class MyFtpClient {
 
 	public short parseInput(){
 		/*
-		 * -1 : kill the session
-		 *  0 : invalic command
+		 * -1 : invalid command
+		 *  0 : kill the session
 		 *  1 : valid command
 		 */
 		return 1
