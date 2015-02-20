@@ -79,6 +79,13 @@ public class MyFtpClient {
 					} else if (data.equals("failure")) {
 						System.out.println("ERROR: Could not delete file.");
 					}
+				} else if (command.equals("quit")) {
+					normalIn.close();
+					terminateIn.close();
+					normalOut.close();
+					terminateOut.close();
+					stdIn.close();
+					System.exit(0);
 				}
 			}
 		} catch (Exception e) {

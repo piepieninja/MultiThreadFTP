@@ -93,6 +93,7 @@ class ClientThread implements Runnable {
 	BufferedReader is;
     PrintStream os;
     String path;
+    boolean running = true;
 
 	public ClientThread(Socket clientSocket) {
 		this.mySocket = clientSocket;
@@ -107,16 +108,14 @@ class ClientThread implements Runnable {
 
 	public void run() {
 		String input;
-
 		try {
-			while (true) {
+			while (running) {
 				input = is.readLine();
 				parseCommand(input);
 			}
 		} catch (IOException ex) {
 			System.out.println(ex);
 		}
-		
 	}
 
 	private void parseCommand(String input) {
@@ -129,62 +128,77 @@ class ClientThread implements Runnable {
 			command = input;
 		}
 
-		if (command.equals("delete")) {
+		switch(command){
+			case "cd":
 
-			//Checks to see if there was a file path
-			File file;
-			if (path == null) {
-				file = new File(System.getProperty("user.dir"));
-			} else {
-				file = new File(path);
-			}
+				//Checks for just "cd"
+				if (path == null) {
 
-			if (!file.exists()) {
-				os.println("no file");
-			} else {
-				boolean t = file.delete();
+				}
+			case "delete":
+
+				//Checks to see if there was a file path
+				File file;
+				if (path == null) {
+					file = new File(System.getProperty("user.dir"));
+				} else {
+					file = new File(path);
+				}
+
+				if (!file.exists()) {
+					os.println("no file");
+				} else {
+					boolean t = file.delete();
+					if (t) {
+						os.println("success");
+					} else {
+						os.println("failure");
+					}
+				}
+				break;
+
+			case "ls":
+
+				File list = new File(System.getProperty("user.dir"));
+				String childs[] = list.list();
+				String output = "";
+				for(String child: childs){
+	            	output += child + "<&&newline&&>";
+	        	}
+	        	os.println(output);
+	        	break;
+
+			case "mkdir":
+
+				//Checks to see if there was a file path
+				File dir;
+				if (path == null) {
+					dir = new File(System.getProperty("user.dir"));
+				} else {
+					dir = new File(path);
+				}
+
+				//creates the new directory and returns success or failure
+				boolean t = dir.mkdir();
 				if (t) {
 					os.println("success");
 				} else {
 					os.println("failure");
 				}
-			}
+				break;
 
+			case "pwd":
 
-		} else if (command.equals("ls")) {
-			File dir = new File(System.getProperty("user.dir"));
-			String childs[] = dir.list();
-			String output = "";
-			for(String child: childs){
-            	output += child + "<&&newline&&>";
-        	}
-        	os.println(output);
-		} else if (command.equals("mkdir")) {
-			
-			//Checks to see if there was a file path
-			File dir;
-			if (path == null) {
-				dir = new File(System.getProperty("user.dir"));
-			} else {
-				dir = new File(path);
-			}
+				os.println(System.getProperty("user.dir"));
+				break;
 
-			//creates the new directory and returns success or failure
-			boolean t = dir.mkdir();
-			if (t) {
-				os.println("success");
-			} else {
-				os.println("failure");
-			}
+			case "quit":
 
-		} else if (command.equals("pwd")) {
-			os.println(System.getProperty("user.dir"));
-		} else if (command.equals("quit")) {
+				running = false;
 
-		} else if (command.equals("get")) {
+			case "get":
 
-		} else if (command.equals("put")) {
-
+			case "put":
 		}
 	}
 
