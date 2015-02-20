@@ -78,10 +78,10 @@ public class MyFtpClient {
 		//	return -1;
 		// long check
 		if (str.contains("get") || str.contains("put") || str.contains("delete") || str.contains("ls") || str.contains("mkdir") || str.contains("pwd") || str.contains("quit") || str.contains("terminate")) 
-			return -1;
+			return 1;
 		if (str.equals("terminate"))
 			return 0;
-		return 1;
+		return -1;
 	}
 
 	public static void printHello() {
