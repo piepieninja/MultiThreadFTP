@@ -8,4 +8,5 @@ client:
 clean:
 	rm *~
 	clear
-
+nuke:
+	rm *.class
