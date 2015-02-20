@@ -92,6 +92,7 @@ class ClientThread implements Runnable {
 	Socket mySocket;
 	BufferedReader is;
     PrintStream os;
+    String path;
 
 	public ClientThread(Socket clientSocket) {
 		this.mySocket = clientSocket;
@@ -119,9 +120,27 @@ class ClientThread implements Runnable {
 	}
 
 	private void parseCommand(String input) {
-		if (input.equals("delete")) {
+		String command;
+		if (input.contains(" ")) {
+			command = input.substring(0, input.indexOf(' '));
+			path = input.substring(input.indexOf(' '));
+			path = path.trim();
+		} else {
+			command = input;
+		}
 
-		} else if (input.equals("ls")) {
+		if (command.equals("delete")) {
+
+			//Checks to see if there was a file path
+			File dir;
+			if (path == null) {
+				dir = new File(System.getProperty("user.dir"));
+			} else {
+				dir = new File(path);
+			}
+
+
+		} else if (command.equals("ls")) {
 			File dir = new File(System.getProperty("user.dir"));
 			String childs[] = dir.list();
 			String output = "";
@@ -129,15 +148,31 @@ class ClientThread implements Runnable {
             	output += child + "<&&newline&&>";
         	}
         	os.println(output);
-		} else if (input.equals("mkdir")) {
+		} else if (command.equals("mkdir")) {
+			
+			//Checks to see if there was a file path
+			File dir;
+			if (path == null) {
+				dir = new File(System.getProperty("user.dir"));
+			} else {
+				dir = new File(path);
+			}
 
-		} else if (input.equals("pwd")) {
+			//creates the new directory and returns success or failure
+			boolean t = dir.mkdir();
+			if (t) {
+				os.println("success");
+			} else {
+				os.println("failure");
+			}
+
+		} else if (command.equals("pwd")) {
 			os.println(System.getProperty("user.dir"));
-		} else if (input.equals("quit")) {
+		} else if (command.equals("quit")) {
 
-		} else if (input.equals("get")) {
+		} else if (command.equals("get")) {
 
-		} else if (input.equals("put")) {
+		} else if (command.equals("put")) {
 
 		}
 	}

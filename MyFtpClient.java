@@ -5,7 +5,7 @@ import java.net.*;
 
 public class MyFtpClient {
 
-	private String IP;
+	private String IP, command;
 	private int nport, tport;
 
 	public MyFtpClient(String IP, int nport, int tport){
@@ -40,7 +40,7 @@ public class MyFtpClient {
                     new InputStreamReader(System.in))
 
 		) {
-			String userInput;
+			String userInput, data;
 			short sh;
 			while(true) {
 				System.out.print("myftp> ");
@@ -61,34 +61,56 @@ public class MyFtpClient {
 						System.exit(1);
 						break;
 				}
-				if (userInput.equals("pwd")) {
+				if (command.equals("pwd")) {
 					System.out.println(normalIn.readLine());
-				} else if (userInput.equals("ls")) {
-					String data = normalIn.readLine();
+				} else if (command.equals("ls")) {
+					data = normalIn.readLine();
 					data = data.replace("<&&newline&&>", "\n");
 					System.out.println(data.substring(0, data.length() - 1));
+				} else if (command.equals("mkdir")) {
+					data = normalIn.readLine();
+					if (data.equals("failure")) {
+						System.out.println("ERROR: Cannot create directory");
+					} 
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("There was an error creating the sockets");
+			System.out.println("There was an error creating the sockets\n" + e);
 		}
 	}
 
-	public short parseInput(String str){
+	public short parseInput(String str) {
 		/*
 		 * -1 : invalid command
-		 *  0 : kill the session
+		 *  0 : terminate the running command (get or put)
 		 *  1 : valid command
 		 */
 		// quick check
 		//if (!(str.charAt(0) == 'g') || !(str.charAt(0) == 'p') || !(str.charAt(0) == 'd') || !(str.charAt(0) == 'l') || !(str.charAt(0) == 'm') || !(str.charAt(0) == 'p') || !(str.charAt(0) == 'q') || !(str.charAt(0) == 't'))
 		//	return -1;
 		// long check
-		if (str.contains("get") || str.contains("put") || str.contains("delete") || str.contains("ls") || str.contains("mkdir") || str.contains("pwd") || str.contains("quit") || str.contains("terminate")) 
+		//if (str.contains("get") || str.contains("put") || str.contains("delete") || str.contains("ls") || str.contains("mkdir") || str.contains("pwd") || str.contains("quit") || str.contains("terminate")) 
+		//	return 1;
+		//if (str.equals("terminate"))
+		//	return 0;
+		//return -1;
+		
+		if (str.contains(" ")) {
+			command = str.substring(0, str.indexOf(' '));
+		} else {
+			command = str;
+		}
+
+		if (command.equals("get") 	 ||   command.equals("put") 	||
+			command.equals("delete") ||   command.equals("cd")		||
+			command.equals("ls")  	 ||   command.equals("mkdir") 	||
+			command.equals("pwd") 	 ||   command.equals("quit")) {
 			return 1;
-		if (str.equals("terminate"))
+		} else if (command.equals("terminate")) {
 			return 0;
-		return -1;
+		} else {
+			return -1;
+		}
 	}
 
 	public static void printHello() {
