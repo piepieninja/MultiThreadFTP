@@ -43,11 +43,12 @@ public class MyFtpClient {
 			String userInput;
 			short sh;
 			while(true) {
-				System.out.print("myftp>");
+				System.out.print("myftp> ");
 				userInput = stdIn.readLine();
 				sh = parseInput(userInput);
 				switch (sh) {
 					case -1:
+						
 					break;
 					case 0:
 					break;
