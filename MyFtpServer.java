@@ -109,12 +109,30 @@ class ClientThread implements Runnable {
 		try {
 			while (true) {
 				input = is.readLine();
-				os.println(input);
+				parseCommand(input);
 			}
 		} catch (IOException ex) {
 			System.out.println(ex);
 		}
 		
+	}
+
+	private void parseCommand(String input) {
+		if (input.equals("delete")) {
+
+		} else if (input.equals("ls")) {
+
+		} else if (input.equals("mkdir")) {
+
+		} else if (input.equals("pwd")) {
+
+		} else if (input.equals("quit")) {
+
+		} else if (input.equals("get")) {
+
+		} else if (input.equals("put")) {
+
+		}
 	}
 
 }
