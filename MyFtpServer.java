@@ -120,11 +120,17 @@ class ClientThread implements Runnable {
 
 	private void parseCommand(String input) {
 		if (input.equals("delete")) {
-			rt.exec(""); // << add file to delete
-		} else if (input.equals("ls")) {
 
+		} else if (input.equals("ls")) {
+			File dir = new File(System.getProperty("user.dir"));
+			String childs[] = dir.list();
+			String output = "";
+			for(String child: childs){
+            	output += child + "<&&newline&&>";
+        	}
+        	os.println(output);
 		} else if (input.equals("mkdir")) {
-			rt.exec(""); // << add directory to make
+
 		} else if (input.equals("pwd")) {
 			os.println(System.getProperty("user.dir"));
 		} else if (input.equals("quit")) {
