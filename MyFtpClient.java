@@ -61,6 +61,9 @@ public class MyFtpClient {
 						System.exit(1);
 						break;
 				}
+				if (userInput.equals("ls") || userInput.equals("pwd")) {
+					System.out.println(normalIn.readLine());
+				} 
 			}
 		} catch (Exception e) {
 			System.out.println("There was an error creating the sockets");
