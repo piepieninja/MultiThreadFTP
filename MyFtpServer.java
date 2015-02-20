@@ -132,11 +132,22 @@ class ClientThread implements Runnable {
 		if (command.equals("delete")) {
 
 			//Checks to see if there was a file path
-			File dir;
+			File file;
 			if (path == null) {
-				dir = new File(System.getProperty("user.dir"));
+				file = new File(System.getProperty("user.dir"));
 			} else {
-				dir = new File(path);
+				file = new File(path);
+			}
+
+			if (!file.exists()) {
+				os.println("no file");
+			} else {
+				boolean t = file.delete();
+				if (t) {
+					os.println("success");
+				} else {
+					os.println("failure");
+				}
 			}
 
 

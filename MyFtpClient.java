@@ -72,6 +72,13 @@ public class MyFtpClient {
 					if (data.equals("failure")) {
 						System.out.println("ERROR: Cannot create directory");
 					} 
+				} else if (command.equals("delete")) {
+					data = normalIn.readLine();
+					if (data.equals("no file")) {
+						System.out.println("ERROR: File does not exist");
+					} else if (data.equals("failure")) {
+						System.out.println("ERROR: Could not delete file.");
+					}
 				}
 			}
 		} catch (Exception e) {
