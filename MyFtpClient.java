@@ -62,34 +62,53 @@ public class MyFtpClient {
 						break;
 				}
 				if (command.equals("pwd")) {
+
 					System.out.println(normalIn.readLine());
+
 				} else if (command.equals("ls")) {
 					data = normalIn.readLine();
 					data = data.replace("<&&newline&&>", "\n");
 					System.out.println(data.substring(0, data.length() - 1));
+				} else if (command.equals("cd")) {
+
+					data = normalIn.readLine();
+					if (data.equals("no directory")) {
+						System.out.println("ERROR: Directory does not exist");
+					} else if (data.equals("not a directory")) {
+						System.out.println("ERROR: That is not a directory");
+					}
+
 				} else if (command.equals("mkdir")) {
+
 					data = normalIn.readLine();
 					if (data.equals("failure")) {
 						System.out.println("ERROR: Cannot create directory");
 					} 
+
 				} else if (command.equals("delete")) {
+
 					data = normalIn.readLine();
 					if (data.equals("no file")) {
 						System.out.println("ERROR: File does not exist");
 					} else if (data.equals("failure")) {
-						System.out.println("ERROR: Could not delete file.");
+						System.out.println("ERROR: Cannot delete file");
 					}
+
 				} else if (command.equals("quit")) {
+
 					normalIn.close();
 					terminateIn.close();
 					normalOut.close();
 					terminateOut.close();
 					stdIn.close();
 					System.exit(0);
+
 				}
 			}
 		} catch (Exception e) {
+
 			System.out.println("There was an error creating the sockets\n" + e);
+
 		}
 	}
 
