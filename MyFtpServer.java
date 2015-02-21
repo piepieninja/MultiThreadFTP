@@ -97,6 +97,7 @@ class ClientThread implements Runnable {
 
 	public ClientThread(Socket clientSocket) {
 		this.mySocket = clientSocket;
+		currentPath = System.getProperty("user.dir");
 
 		try {
 			is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -141,7 +142,6 @@ class ClientThread implements Runnable {
 				//Checks for "cd .."
 				else if (userPath.equals("..")) {
 
-					//
 					File parentDirectory = new File(System.getProperty("user.dir"));
 					currentPath = parentDirectory.getAbsoluteFile().getParent();
 					System.out.println(currentPath);
@@ -215,7 +215,7 @@ class ClientThread implements Runnable {
 
 			case "pwd":
 
-				os.println(System.getProperty("user.dir"));
+				os.println(currentPath);
 				break;
 
 			case "quit":
