@@ -61,16 +61,28 @@ public class MyFtpClient {
 						System.exit(1);
 						break;
 				}
+
 				if (command.equals("pwd")) {
 
+					//prints out the current directory
 					System.out.println(normalIn.readLine());
 
 				} else if (command.equals("ls")) {
+
+					//prints out all of the files in the current directory
 					data = normalIn.readLine();
-					data = data.replace("<&&newline&&>", "\n");
-					System.out.println(data.substring(0, data.length() - 1));
+					
+					//check if there are no files or directories in current directory
+					if (data.equals("")) {
+						System.out.print("");
+					} else {
+						data = data.replace("<&&newline&&>", "\n");
+						System.out.println(data.substring(0, data.length() - 1));
+					}
+
 				} else if (command.equals("cd")) {
 
+					//changes the directory to the specified directory
 					data = normalIn.readLine();
 					if (data.equals("no directory")) {
 						System.out.println("ERROR: Directory does not exist");
@@ -80,6 +92,7 @@ public class MyFtpClient {
 
 				} else if (command.equals("mkdir")) {
 
+					//creates a directory in the current directory
 					data = normalIn.readLine();
 					if (data.equals("failure")) {
 						System.out.println("ERROR: Cannot create directory");
@@ -87,6 +100,7 @@ public class MyFtpClient {
 
 				} else if (command.equals("delete")) {
 
+					//deletes the specified file
 					data = normalIn.readLine();
 					if (data.equals("no file")) {
 						System.out.println("ERROR: File does not exist");
@@ -96,6 +110,7 @@ public class MyFtpClient {
 
 				} else if (command.equals("quit")) {
 
+					//close all streams and exit
 					normalIn.close();
 					terminateIn.close();
 					normalOut.close();
@@ -118,15 +133,6 @@ public class MyFtpClient {
 		 *  0 : terminate the running command (get or put)
 		 *  1 : valid command
 		 */
-		// quick check
-		//if (!(str.charAt(0) == 'g') || !(str.charAt(0) == 'p') || !(str.charAt(0) == 'd') || !(str.charAt(0) == 'l') || !(str.charAt(0) == 'm') || !(str.charAt(0) == 'p') || !(str.charAt(0) == 'q') || !(str.charAt(0) == 't'))
-		//	return -1;
-		// long check
-		//if (str.contains("get") || str.contains("put") || str.contains("delete") || str.contains("ls") || str.contains("mkdir") || str.contains("pwd") || str.contains("quit") || str.contains("terminate")) 
-		//	return 1;
-		//if (str.equals("terminate"))
-		//	return 0;
-		//return -1;
 		
 		if (str.contains(" ")) {
 			command = str.substring(0, str.indexOf(' '));

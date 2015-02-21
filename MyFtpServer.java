@@ -165,12 +165,7 @@ class ClientThread implements Runnable {
 			case "delete":
 
 				//Checks to see if there was a file path
-				File file; 
-				if (userPath == null) {
-					file = new File(currentPath);
-				} else {
-					file = new File(userPath);
-				}
+				File file = new File(currentPath + "/" + userPath);
 
 				if (!file.exists()) {
 					os.println("no file");
@@ -187,12 +182,16 @@ class ClientThread implements Runnable {
 			case "ls":
 
 				File list = new File(currentPath);
-				String childs[] = list.list();
-				String output = "";
-				for(String child: childs){
-	            	output += child + "<&&newline&&>";
-	        	}
-	        	os.println(output);
+				if (list == null) {
+					os.println("");
+				} else {
+					String childs[] = list.list();
+					String output = "";
+					for(String child: childs){
+            			output += child + "<&&newline&&>";
+        			}
+        			os.println(output);
+				}
 	        	break;
 
 			case "mkdir":
