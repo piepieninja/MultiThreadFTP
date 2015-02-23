@@ -15,4 +15,4 @@ myftpserver:
 myftpclient:
 	java MyFtpClient localhost 5555 5556
 yourmom:
-	echo 'Mason's mom'
+	echo 'Masons mom'
