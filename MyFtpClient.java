@@ -1,5 +1,3 @@
-// Caleb Was Here
-
 import java.io.*;
 import java.net.*;
 
@@ -105,7 +103,7 @@ public class MyFtpClient {
 					if (data.equals("no file")) {
 						System.out.println("ERROR: File does not exist");
 					} else if (data.equals("failure")) {
-						System.out.println("ERROR: Cannot delete file");
+						System.out.println("ERROR: That is not a file");
 					}
 
 				} else if (command.equals("quit")) {
