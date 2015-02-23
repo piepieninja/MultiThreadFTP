@@ -12,3 +12,7 @@ nuke:
 	rm *.class
 myftpserver:
 	java MyFtpServer 5555 5556
+myftpclient:
+	java MyFtpClient localhost 5555 5556
+yourmom:
+	echo 'Mason's mom'

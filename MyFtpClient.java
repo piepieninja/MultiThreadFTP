@@ -158,11 +158,18 @@ public class MyFtpClient {
 
 	public static void main (String[] args) throws IOException{
 	
-		// if (args.length != 3){
-		// 	System.err.println("Please use the correct syntax.\nUSAGE: MyFtpClient <SERVER IP> <NORMAL PORT> <TERMINATION PORT>");
-		// 	System.exit(1);
-		// }
+		if (args.length != 3){
+			System.out.println("Please use the correct syntax.\nUSAGE: MyFtpClient <SERVER IP> <NORMAL PORT> <TERMINATION PORT>");
+		 	System.exit(1);
+		} else if (args[1] == args[2]){
+			System.out.println("ERROR: Please enter different ports.\nUSAGE: java MyFtpClient <IP> <NPORT> <TPORT>");
+			System.exit(1);
+		} 
 	
+		String IP = args[0];
+		int nport = Integer.parseInt(args[1]);
+		int tport = Integer.parseInt(args[2]);
+
 		printHello();
 
 		MyFtpClient ftp = new MyFtpClient("localhost", 5555, 5556);
