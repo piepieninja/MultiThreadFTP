@@ -4,7 +4,7 @@ import java.util.*;
 
 public class MyFtpClient {
 
-	private String IP, command;
+	private String IP;
 	private int nport, tport;
 	private static Socket normalSocket;	
 	private static Socket terminateSocket;
@@ -23,6 +23,7 @@ public class MyFtpClient {
 
 	public void sendCommand(String userInput ) throws Exception {
 		String data;
+		String command = userInput.split(" ")[0];
 		if (command.equals("put")) {
 			File file = new File(System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1));
 			System.out.println(System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1));
@@ -101,18 +102,13 @@ public class MyFtpClient {
 	}
 
 	private void setupSocket() throws Exception{
-		//creates a socket to connect to the client port on the server
-		 normalSocket = new Socket(IP, nport);	
-		//creates a socket to connect to the terminate port on the server
-		terminateSocket = new Socket(IP, tport);
-		//Input for each socket
-		 normalIn = new BufferedReader( new InputStreamReader(normalSocket.getInputStream()));
+		 normalSocket = new Socket(IP, nport); //creates a socket to connect to the client port on the server
+		 terminateSocket = new Socket(IP, tport); //creates a socket to connect to the terminate port on the server
+		 normalIn = new BufferedReader( new InputStreamReader(normalSocket.getInputStream())); //Input for each socket
 		 terminateIn = new BufferedReader(new InputStreamReader(terminateSocket.getInputStream()));
-		//Output for each socket
-		 normalOut = new PrintWriter(normalSocket.getOutputStream(), true);
+		 normalOut = new PrintWriter(normalSocket.getOutputStream(), true); //Output for each socket
     	 terminateOut = new PrintWriter(terminateSocket.getOutputStream(), true);
-        //Input from the user
-         stdIn = new BufferedReader(new InputStreamReader(System.in));
+         stdIn = new BufferedReader(new InputStreamReader(System.in)); //Input from the user
 	}
 
 	public void beginCommunication(){
@@ -123,6 +119,7 @@ public class MyFtpClient {
 			while(true) {
 				System.out.print("myftp> ");
 				userInput = stdIn.readLine();
+
 				sh = parseInput(userInput);
 				switch (sh) {
 					case -1:
@@ -147,10 +144,10 @@ public class MyFtpClient {
 
 	public short parseInput(String str) {
 		ArrayList<String> commands = new ArrayList<String>(Arrays.asList("get", "delete", "ls", "pwd", "put", "cd", "mkdir", "quit"));
-		command = str.split(" ")[0];
-		if (commands.contains(command)) {
+		String cmd = str.split(" ")[0];
+		if (commands.contains(cmd)) {
 			return 1;
-		} else if (command.equals("terminate")) {
+		} else if (cmd.equals("terminate")) {
 			return 0;
 		} else {
 			return -1;
