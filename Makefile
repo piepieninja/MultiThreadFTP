@@ -1,5 +1,9 @@
 all:
 	perl local_cache.pl
+	javac CommandThread.java
+	javac ClientThread.java
+	javac ClientManager.java
+	javac TerminateManager.java
 	javac MyFtpServer.java
 	javac MyFtpClient.java
 server:

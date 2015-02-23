@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class MyFtpClient {
 
@@ -77,19 +78,17 @@ public class MyFtpClient {
 						normalOut.println(userInput);
 
 						break;
-					default:
+						default:
 						System.err.println("error parsing input");
 						System.exit(1);
 						break;
 				}
 
 				if (command.equals("pwd")) {
-
 					//prints out the current directory
 					System.out.println(normalIn.readLine());
 
 				} else if (command.equals("ls")) {
-
 					//prints out all of the files in the current directory
 					data = normalIn.readLine();
 					
@@ -102,7 +101,6 @@ public class MyFtpClient {
 					}
 
 				} else if (command.equals("cd")) {
-
 					//changes the directory to the specified directory
 					data = normalIn.readLine();
 					if (data.equals("no directory")) {
@@ -112,15 +110,12 @@ public class MyFtpClient {
 					}
 
 				} else if (command.equals("mkdir")) {
-
 					//creates a directory in the current directory
 					data = normalIn.readLine();
 					if (data.equals("failure")) {
 						System.out.println("ERROR: Cannot create directory");
 					} 
-
 				} else if (command.equals("delete")) {
-
 					//deletes the specified file
 					data = normalIn.readLine();
 					if (data.equals("no file")) {
@@ -128,7 +123,6 @@ public class MyFtpClient {
 					} else if (data.equals("failure")) {
 						System.out.println("ERROR: That is not a file");
 					}
-
 				} else if (command.equals("quit")) {
 					//close all streams and exit
 					normalIn.close();
@@ -145,23 +139,9 @@ public class MyFtpClient {
 	}
 
 	public short parseInput(String str) {
-		/*
-		 * -1 : invalid command
-		 *  0 : terminate the running command (get or put)
-		 *  1 : valid command
-		 */
-		
-		if (str.contains(" ")) {
-			command = str.substring(0, str.indexOf(' '));
-		} else {
-			command = str;
-		}
-
-
-		if (command.equals("get") 	 ||   command.equals("put") 	||
-			command.equals("delete") ||   command.equals("cd")		||
-			command.equals("ls")  	 ||   command.equals("mkdir") 	||
-			command.equals("pwd") 	 ||   command.equals("quit")) {
+		ArrayList<String> commands = new ArrayList<String>(Arrays.asList("get", "delete", "ls", "pwd", "put", "cd", "mkdir", "quit"));
+		command = str.split(" ")[0];
+		if (commands.contains(command)) {
 			return 1;
 		} else if (command.equals("terminate")) {
 			return 0;
@@ -175,7 +155,6 @@ public class MyFtpClient {
 	}
 
 	public static void main (String[] args) throws IOException{
-	
 		if (args.length != 3){
 			System.out.println("Please use the correct syntax.\nUSAGE: MyFtpClient <SERVER IP> <NORMAL PORT> <TERMINATION PORT>");
 		 	System.exit(1);
@@ -191,7 +170,6 @@ public class MyFtpClient {
 		printHello();
 
 		MyFtpClient ftp = new MyFtpClient("localhost", 5555, 5556);
-
 	}
 
 }
