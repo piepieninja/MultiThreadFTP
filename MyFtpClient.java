@@ -163,6 +163,8 @@ public class MyFtpClient {
 		// 	System.exit(1);
 		// }
 	
+		printHello();
+
 		MyFtpClient ftp = new MyFtpClient("localhost", 5555, 5556);
 
 	}
