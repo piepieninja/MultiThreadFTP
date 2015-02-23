@@ -73,64 +73,66 @@ public class MyFtpClient {
 							} else {
 								System.out.println("ERROR: That is not a file.");
 							}
+						} else if (command.equals("get")) {
+							System.out.println("Executing get command client side");
+							normalOut.println(userInput);
+							System.out.println(normalIn.readLine());
+						} else {
+								normalOut.println(userInput);
+						    	if (command.equals("pwd")) {
+									//prints out the current directory
+									System.out.println(normalIn.readLine());
+
+								} else if (command.equals("ls")) {
+									//prints out all of the files in the current directory
+									data = normalIn.readLine();
+									
+									//check if there are no files or directories in current directory
+									if (data.equals("")) {
+										System.out.print("");
+									} else {
+										data = data.replace("<&&newline&&>", "\n");
+										System.out.println(data.substring(0, data.length() - 1));
+									}
+
+								} else if (command.equals("cd")) {
+									//changes the directory to the specified directory
+									data = normalIn.readLine();
+									if (data.equals("no directory")) {
+										System.out.println("ERROR: Directory does not exist");
+									} else if (data.equals("not a directory")) {
+										System.out.println("ERROR: That is not a directory");
+									}
+
+								} else if (command.equals("mkdir")) {
+									//creates a directory in the current directory
+									data = normalIn.readLine();
+									if (data.equals("failure")) {
+										System.out.println("ERROR: Cannot create directory");
+									} 
+								} else if (command.equals("delete")) {
+									//deletes the specified file
+									data = normalIn.readLine();
+									if (data.equals("no file")) {
+										System.out.println("ERROR: File does not exist");
+									} else if (data.equals("failure")) {
+										System.out.println("ERROR: That is not a file");
+									}
+								} else if (command.equals("quit")) {
+									//close all streams and exit
+									normalIn.close();
+									terminateIn.close();
+									normalOut.close();
+									terminateOut.close();
+									stdIn.close();
+									System.exit(0);
+								}
 						}
-
-						normalOut.println(userInput);
-
 						break;
 						default:
 						System.err.println("error parsing input");
 						System.exit(1);
 						break;
-				}
-
-				if (command.equals("pwd")) {
-					//prints out the current directory
-					System.out.println(normalIn.readLine());
-
-				} else if (command.equals("ls")) {
-					//prints out all of the files in the current directory
-					data = normalIn.readLine();
-					
-					//check if there are no files or directories in current directory
-					if (data.equals("")) {
-						System.out.print("");
-					} else {
-						data = data.replace("<&&newline&&>", "\n");
-						System.out.println(data.substring(0, data.length() - 1));
-					}
-
-				} else if (command.equals("cd")) {
-					//changes the directory to the specified directory
-					data = normalIn.readLine();
-					if (data.equals("no directory")) {
-						System.out.println("ERROR: Directory does not exist");
-					} else if (data.equals("not a directory")) {
-						System.out.println("ERROR: That is not a directory");
-					}
-
-				} else if (command.equals("mkdir")) {
-					//creates a directory in the current directory
-					data = normalIn.readLine();
-					if (data.equals("failure")) {
-						System.out.println("ERROR: Cannot create directory");
-					} 
-				} else if (command.equals("delete")) {
-					//deletes the specified file
-					data = normalIn.readLine();
-					if (data.equals("no file")) {
-						System.out.println("ERROR: File does not exist");
-					} else if (data.equals("failure")) {
-						System.out.println("ERROR: That is not a file");
-					}
-				} else if (command.equals("quit")) {
-					//close all streams and exit
-					normalIn.close();
-					terminateIn.close();
-					normalOut.close();
-					terminateOut.close();
-					stdIn.close();
-					System.exit(0);
 				}
 			}
 		} catch (Exception e) {

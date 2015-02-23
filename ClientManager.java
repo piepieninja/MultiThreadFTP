@@ -4,8 +4,8 @@ import java.net.*;
 
 public class ClientManager implements Runnable {
 
-	private ServerSocket normalSocket;
-	private Socket clientSocket;
+	private ServerSocket normalSocket;//Accepts a request, runs a function, then returns that to the requester
+	private Socket clientSocket; //Traditional communication endpoint
 	private int port;
 
 	 /**
@@ -26,8 +26,8 @@ public class ClientManager implements Runnable {
 			// creates the socket for accepting clients
 			normalSocket = new ServerSocket(port);
 			while(true){
-				clientSocket = normalSocket.accept();
-				(new Thread(new ClientThread(clientSocket))).start();
+				clientSocket = normalSocket.accept(); //ServerSocket returns a new socket on an unspecified port Client instantiates one
+				(new Thread(new ClientThread(clientSocket))).start(); //Spawn new thread using our newly created socket
 			}
 		} catch (Exception e) {
 			System.out.printf("There was an error creating the socket");

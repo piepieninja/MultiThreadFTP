@@ -42,6 +42,7 @@ public class ClientThread implements Runnable {
 		try {
 			while (running) {
 				input = is.readLine();
+				System.out.println(input);
 				routeCommand(input);
 			}
 		} catch (IOException ex) {
@@ -134,7 +135,7 @@ public class ClientThread implements Runnable {
      * @param destPath the new desired name of the directory
      */
 	private void makeDirectory(){
-						//Checks to see if there was a file path
+				//Checks to see if there was a file path
 				File dir = new File(currentPath + "/" + destPath);
 				System.out.println(currentPath);
 
@@ -147,7 +148,7 @@ public class ClientThread implements Runnable {
 				}
 	}
 
-	 /**
+	/**
      * Determines which method needs to be executed given the clients input
      * @param input the command provided by the client
      * @return an instance of ClientThread instantiated with the current path and configured IO streams
@@ -182,16 +183,18 @@ public class ClientThread implements Runnable {
 				//Send threads id back to client
 				//Start thread 
 				//send hello from within the thread
-				Thread commandThread = new Thread(new CommandThread(this.mySocket, "get"));
-				os.println(commandThread.getId());
-				System.out.println("THREAD ID " + commandThread.getId());
-				try{
-					commandThread.start();
-					wait();
+				// Thread commandThread = new Thread(new CommandThread(this.mySocket, "get"));
+				// os.println(commandThread.getId());
+				// System.out.println("THREAD ID " + commandThread.getId());
+				// try{
+				// 	commandThread.start();
+				// 	wait();
 
-				} catch(Exception e) {
-					System.out.println("INtereupted exception");
-				}
+				// } catch(Exception e) {
+				// 	System.out.println("INtereupted exception");
+				// }
+				System.out.println("Executing get command server side");
+				os.println("You entered the get command");
 				break;
 			case "put":
 				System.out.println("Received file");
