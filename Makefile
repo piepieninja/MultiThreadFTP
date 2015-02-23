@@ -1,4 +1,5 @@
 all:
+	ruby mom.rb
 	javac MyFtpServer.java
 	javac MyFtpClient.java
 server:
@@ -11,8 +12,10 @@ clean:
 nuke:
 	rm *.class
 myftpserver:
+	ruby mom.rb
 	java MyFtpServer 5555 5556
 myftpclient:
+	ruby mom.rb
 	java MyFtpClient localhost 5555 5556
 yourmom:
-	echo 'Masons mom'
+	ruby mom.rb

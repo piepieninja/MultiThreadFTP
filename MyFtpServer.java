@@ -93,7 +93,6 @@ class TerminateManager implements Runnable {
 }
 
 class ClientThread implements Runnable {
-	final Runtime rt = Runtime.getRuntime();
 	Socket mySocket;
 	BufferedReader is;
     PrintStream os;
