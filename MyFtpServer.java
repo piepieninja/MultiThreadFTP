@@ -138,29 +138,54 @@ class ClientThread implements Runnable {
 		switch(command){
 			case "cd":
 
-				//Checks for just "cd"
-				if (userPath == null || userPath.equals(".")) {
-					//Do nothing
-					os.println("success");
-				} 
-				//Checks for "cd .."
-				else if (userPath.equals("..")) {
-
-					File parentDirectory = new File(currentPath);
-					currentPath = parentDirectory.getAbsoluteFile().getParent();
-					os.println("success");
-				}
-				//All other paths
-				else {
+				String absolutePath = System.getProperty("user.dir");
+				if (userPath.substring(0, 1).equals("/")) {
 					File directory = new File(userPath);
 					//Check if directory exists
 					if (!directory.exists()) {
 						os.println("no directory");
 					} else if (directory.exists()) {
-						currentPath = System.getProperty("user.dir") + "/" + userPath;
+						currentPath = userPath;
 						os.println("success");
 					} else {
 						os.println("not a directory");
+					}
+				} else if (userPath.substring(0, 1).equals("~")) {
+					File directory = new File(userPath);
+					//Check if directory exists
+					if (!directory.exists()) {
+						os.println("no directory");
+					} else if (directory.exists()) {
+						currentPath = userPath;
+						os.println("success");
+					} else {
+						os.println("not a directory");
+					}
+				} else {
+					//Checks for just "cd"
+					if (userPath == null || userPath.equals(".")) {
+						//Do nothing
+						os.println("success");
+					} 
+					//Checks for "cd .."
+					else if (userPath.equals("..")) {
+
+						File parentDirectory = new File(currentPath);
+						currentPath = parentDirectory.getAbsoluteFile().getParent();
+						os.println("success");
+					}
+					//All other paths
+					else {
+						File directory = new File(userPath);
+						//Check if directory exists
+						if (!directory.exists()) {
+							os.println("no directory");
+						} else if (directory.exists()) {
+							currentPath = currentPath + "/" + userPath;
+							os.println("success");
+						} else {
+							os.println("not a directory");
+						}
 					}
 				}
 				break;
