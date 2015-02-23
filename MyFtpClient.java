@@ -52,7 +52,30 @@ public class MyFtpClient {
 						terminateOut.println("terminate");
 						break;
 					case 1:
+						if (command.equals("put")) {
+							File file = new File(System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1));
+							System.out.println(System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1));
+							//Check if directory exists
+							if (!file.exists()) {
+								System.out.println("ERROR: That file does not exist");
+							} else if (file.exists()) {
+								// add stuff and things
+								byte [] fileByteArray  = new byte [(int)file.length()];
+								FileInputStream fis = new FileInputStream(file);
+								BufferedInputStream bis = new BufferedInputStream(fis);
+								bis.read(fileByteArray,0,fileByteArray.length);
+								OutputStream os = normalSocket.getOutputStream();
+								os.write(fileByteArray,0,fileByteArray.length);
+		      					os.flush();
+    							fis.close();
+    							bis.close();
+							} else {
+								System.out.println("ERROR: That is not a file.");
+							}
+						}
+
 						normalOut.println(userInput);
+
 						break;
 					default:
 						System.err.println("error parsing input");
@@ -137,6 +160,7 @@ public class MyFtpClient {
 		} else {
 			command = str;
 		}
+
 
 		if (command.equals("get") 	 ||   command.equals("put") 	||
 			command.equals("delete") ||   command.equals("cd")		||

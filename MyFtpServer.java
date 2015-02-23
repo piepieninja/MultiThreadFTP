@@ -150,17 +150,6 @@ class ClientThread implements Runnable {
 					} else {
 						os.println("not a directory");
 					}
-				} else if (userPath.substring(0, 1).equals("~")) {
-					File directory = new File(userPath);
-					//Check if directory exists
-					if (!directory.exists()) {
-						os.println("no directory");
-					} else if (directory.exists()) {
-						currentPath = userPath;
-						os.println("success");
-					} else {
-						os.println("not a directory");
-					}
 				} else {
 					//Checks for just "cd"
 					if (userPath == null || userPath.equals(".")) {
@@ -245,10 +234,14 @@ class ClientThread implements Runnable {
 			case "quit":
 
 				running = false;
+				break;
 
 			case "get":
 
+				break;
 			case "put":
+				System.out.println("Received file");
+				break;
 		}
 	}
 
