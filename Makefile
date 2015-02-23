@@ -10,3 +10,5 @@ clean:
 	clear
 nuke:
 	rm *.class
+myftpserver:
+	java MyFtpServer 5555 5556
