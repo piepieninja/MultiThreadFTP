@@ -107,7 +107,6 @@ public class MyFtpClient {
 					}
 
 				} else if (command.equals("quit")) {
-
 					//close all streams and exit
 					normalIn.close();
 					terminateIn.close();
@@ -115,13 +114,10 @@ public class MyFtpClient {
 					terminateOut.close();
 					stdIn.close();
 					System.exit(0);
-
 				}
 			}
 		} catch (Exception e) {
-
 			System.out.println("There was an error creating the sockets\n" + e);
-
 		}
 	}
 

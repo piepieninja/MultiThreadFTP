@@ -125,7 +125,7 @@ class ClientThread implements Runnable {
 		}
 	}
 
-	private void parseCommand(String input) {
+	private synchronized void parseCommand(String input) {
 		String command;
 		if (input.contains(" ")) {
 			command = input.substring(0, input.indexOf(' '));
@@ -222,12 +222,61 @@ class ClientThread implements Runnable {
 				running = false;
 
 			case "get":
+				//Create new thread for cmd handling
+				//Send threads id back to client
+				//Start thread 
+				//send hello from within the thread
+				Thread commandThread = new Thread(new CommandThread(this.mySocket, "get"));
+				os.println(commandThread.getId());
+				System.out.println("THREAD ID " + commandThread.getId());
+				try{
+					commandThread.start();
+					wait();
+
+				} catch(Exception e) {
+					System.out.println("INtereupted exception");
+				}
+
 
 			case "put":
 		}
 	}
-
 }
+
+
+class CommandThread implements Runnable {
+	Socket mySocket;
+	BufferedReader is;
+    PrintStream os;
+    boolean running = true;
+
+	public CommandThread(Socket clientSocket, String cmd) {
+		System.out.println("CREATED COMMAND THREAD");
+		try {
+			is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	    	os = new PrintStream(clientSocket.getOutputStream());
+		} catch (IOException ex) {
+			System.out.println(ex);
+		}
+	}
+
+	public void run() {
+		System.out.println("RUNNING COMMAND THREAD");
+		String input;
+		try {
+			System.out.println("PRINTING FROM COMMAND THREAD");
+			os.println("Hello from the get thread");
+		} catch (Exception ex) {
+			System.out.println(ex);
+		}
+		finally {
+			notifyAll();
+		}
+	}
+}
+
+
+
 
 
 
