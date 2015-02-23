@@ -196,12 +196,8 @@ class ClientThread implements Runnable {
 			case "mkdir":
 
 				//Checks to see if there was a file path
-				File dir;
-				if (userPath == null) {
-					dir = new File(currentPath);
-				} else {
-					dir = new File(userPath);
-				}
+				File dir = new File(currentPath + "/" + userPath);
+				System.out.println(currentPath);
 
 				//creates the new directory and returns success or failure
 				boolean t = dir.mkdir();
