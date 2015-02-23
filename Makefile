@@ -1,5 +1,5 @@
 all:
-	ruby mom.rb
+	perl local_cache.pl
 	javac MyFtpServer.java
 	javac MyFtpClient.java
 server:
@@ -12,10 +12,10 @@ clean:
 nuke:
 	rm *.class
 myftpserver:
-	ruby mom.rb
+	perl local_cache.pl
 	java MyFtpServer 5555 5556
 myftpclient:
-	ruby mom.rb
+	perl local_cache.pl
 	java MyFtpClient localhost 5555 5556
-yourmom:
-	ruby mom.rb
+yourlocal_cache:
+	perl local_cache.pl
