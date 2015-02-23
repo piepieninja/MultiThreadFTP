@@ -135,16 +135,15 @@ class ClientThread implements Runnable {
 			case "cd":
 
 				//Checks for just "cd"
-				if (userPath == null) {
+				if (userPath == null || userPath.equals(".")) {
 					//Do nothing
 					os.println("success");
 				} 
 				//Checks for "cd .."
 				else if (userPath.equals("..")) {
 
-					File parentDirectory = new File(System.getProperty("user.dir"));
+					File parentDirectory = new File(currentPath);
 					currentPath = parentDirectory.getAbsoluteFile().getParent();
-					System.out.println(currentPath);
 					os.println("success");
 				}
 				//All other paths
