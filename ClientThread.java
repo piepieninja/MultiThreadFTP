@@ -191,7 +191,6 @@ public class ClientThread implements Runnable {
      * @return an instance of ClientThread instantiated with the current path and configured IO streams
      */
 	private synchronized void routeCommand(String input) {
-		System.out.println("Error: " + input);
 		String[] inputs = input.split(" ");
 		String command = inputs[0];
 
@@ -222,7 +221,7 @@ public class ClientThread implements Runnable {
 				break;
 			case "put":
 				try {
-					putFile(inputs[1]);
+					putFile(destPath);
 				} catch (IOException e) {
 					System.out.println("There was an error writing the file to the server");
 				}		

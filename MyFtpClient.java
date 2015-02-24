@@ -50,6 +50,7 @@ public class MyFtpClient {
     		out.close();
     		fis.close();
     		bis.close();
+    		normalOut.flush();
 		}
 	}
 
@@ -61,6 +62,9 @@ public class MyFtpClient {
 
 
 	public void routeCommand(String userInput) throws Exception {
+		if (userInput == null) {
+			return;
+		} 
 		normalOut.println(userInput);
 		String command = userInput.split(" ")[0];
 		String data;
