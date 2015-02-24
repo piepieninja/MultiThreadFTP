@@ -149,6 +149,30 @@ public class ClientThread implements Runnable {
 	}
 
 	/**
+	* Put a file from the client onto the server
+	*/
+	private void putFile() throws IOException {
+		int bytesRead, current;
+
+		String fileName = is.readLine();
+		os.println("received file name");
+		int fileSize = Integer.parseInt(is.readLine());
+		os.println("received file size");
+		byte[] fileArray = new byte[fileSize];
+		InputStream is = mySocket.getInputStream();
+		FileOutputStream fos = new FileOutputStream(fileName);
+		BufferedOutputStream bos = new BufferedOutputStream(fos);
+		bytesRead = is.read(fileArray, 0, fileArray.length);
+		current = bytesRead;
+		while (bytesRead < fileSize) {
+			bytesRead = is.read(fileArray, current, (fileSize - current));
+			current += bytesRead;
+		}
+		bos.write(fileArray, 0, fileSize);
+		bos.flush();
+	}
+
+	/**
      * Determines which method needs to be executed given the clients input
      * @param input the command provided by the client
      * @return an instance of ClientThread instantiated with the current path and configured IO streams
@@ -197,7 +221,12 @@ public class ClientThread implements Runnable {
 				os.println("You entered the get command");
 				break;
 			case "put":
-				System.out.println("Received file");
+				try {
+					putFile();
+				} catch (IOException e) {
+					System.out.println("There was an error writing the file to the server");
+				}
+				
 				break;
 		}
 	}
