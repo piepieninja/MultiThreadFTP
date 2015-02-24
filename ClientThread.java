@@ -173,6 +173,7 @@ public class ClientThread implements Runnable {
 
     	bos.flush();
     	bos.close();
+    	ist.close();
 	}
 
 	/**
