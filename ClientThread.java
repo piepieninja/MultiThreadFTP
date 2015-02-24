@@ -150,11 +150,9 @@ public class ClientThread implements Runnable {
 	/**
 	* Put a file from the client onto the server
 	*/
-	private void putFile() throws IOException {
+	private void putFile(String fileName) throws IOException {
 		int bytesRead = 0, current;
 		os.println("received put command");
-		String fileName = is.readLine();
-		os.println("received file name");
 		int fileSize = Integer.parseInt(is.readLine());
 		os.println("received file size");
 		System.out.println("Got here");
@@ -193,6 +191,7 @@ public class ClientThread implements Runnable {
      * @return an instance of ClientThread instantiated with the current path and configured IO streams
      */
 	private synchronized void routeCommand(String input) {
+		System.out.println("Error: " + input);
 		String[] inputs = input.split(" ");
 		String command = inputs[0];
 
@@ -223,7 +222,7 @@ public class ClientThread implements Runnable {
 				break;
 			case "put":
 				try {
-					putFile();
+					putFile(inputs[1]);
 				} catch (IOException e) {
 					System.out.println("There was an error writing the file to the server");
 				}		

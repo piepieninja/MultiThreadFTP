@@ -32,8 +32,6 @@ public class MyFtpClient {
 			normalOut.println(userInput.split(" ")[0]);
 			normalIn.readLine();
 			//send file name and length
-			normalOut.println(userInput.substring(userInput.indexOf(' ') + 1));
-			normalIn.readLine();
 			normalOut.println((int)file.length());
 			normalIn.readLine();
 
