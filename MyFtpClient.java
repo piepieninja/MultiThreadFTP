@@ -53,17 +53,17 @@ public class MyFtpClient {
 	}
 
 
-	public void routeCommand(String command) throws Exception {
-		normalOut.println(command);
-		String data = normalIn.readLine();
+	public void routeCommand(String userInput) throws Exception {
+		normalOut.println(userInput);
+		String command = userInput.split(" ")[0];
+		String data;
 
     	if (command.equals("pwd")) {
 			//prints out the current directory
 			System.out.println(normalIn.readLine());
 		} else if (command.equals("ls")) {
 			//prints out all of the files in the current directory
-			//data = normalIn.readLine();
-			
+			data = normalIn.readLine();
 			//check if there are no files or directories in current directory
 			if (data.equals("")) {
 				System.out.print("");
@@ -71,24 +71,24 @@ public class MyFtpClient {
 				data = data.replace("<&&newline&&>", "\n");
 				System.out.println(data.substring(0, data.length() - 1));
 			}
-
 		} else if (command.equals("cd")) {
 			//changes the directory to the specified directory
-			//data = normalIn.readLine();
+			data = normalIn.readLine();
 			if (data.equals("no directory")) {
 				System.out.println("ERROR: Directory does not exist");
 			} else if (data.equals("not a directory")) {
 				System.out.println("ERROR: That is not a directory");
 			}
-
 		} else if (command.equals("mkdir")) {
 			//creates a directory in the current directory
-			//data = normalIn.readLine();
+			data = normalIn.readLine();
 			if (data.equals("failure")) {
 				System.out.println("ERROR: Cannot create directory");
 			} 
 		} else if (command.equals("delete")) {
 			//deletes the specified file
+			data = normalIn.readLine();
+
 			if (data.equals("no file")) {
 				System.out.println("ERROR: File does not exist");
 			} else if (data.equals("failure")) {
@@ -112,7 +112,7 @@ public class MyFtpClient {
 		} else if (command.equals("get")) {
 			clientGetFile(userInput);
 		} else {
-			routeCommand(command);
+			routeCommand(userInput);
 		}
 	}
 
