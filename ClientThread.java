@@ -152,7 +152,6 @@ public class ClientThread implements Runnable {
 	*/
 	private void putFile() throws IOException {
 		int bytesRead, current;
-
 		String fileName = is.readLine();
 		os.println("received file name");
 		int fileSize = Integer.parseInt(is.readLine());
@@ -171,6 +170,18 @@ public class ClientThread implements Runnable {
 		bos.flush();
 	}
 
+	public void serverGetFile() {
+		Thread commandThread = new Thread(new CommandThread(this.mySocket, "get", is, os));
+		System.out.println("THREAD ID " + commandThread.getId());
+		commandThread.start();
+		try{
+			commandThread.join();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		 System.out.println("RESUMING CLIENT THREAD");
+	}
+
 	/**
      * Determines which method needs to be executed given the clients input
      * @param input the command provided by the client
@@ -179,7 +190,6 @@ public class ClientThread implements Runnable {
 	private synchronized void routeCommand(String input) {
 		String[] inputs = input.split(" ");
 		String command = inputs[0];
-					System.out.println("INputs" +  inputs[0] + " " );
 
 		if(inputs.length > 1) {
 			destPath = inputs[1];
@@ -204,30 +214,14 @@ public class ClientThread implements Runnable {
 				running = false;
 				break;
 			case "get":
-				//Create new thread for cmd handling
-				//Send threads id back to client
-				//Start thread 
-				//send hello from within the thread
-				Thread commandThread = new Thread(new CommandThread(this.mySocket, "get"));
-				os.println(commandThread.getId());
-				System.out.println("THREAD ID " + commandThread.getId());
-				try{
-				 	commandThread.start();
-				 	wait(); //Waiting for command thread to notify
-
-				 } catch(Exception e) {
-				 	System.out.println("INtereupted exception");
-				 }
-				System.out.println("Executing get command server side");
-				os.println("You entered the get command");
+				serverGetFile();
 				break;
 			case "put":
 				try {
 					putFile();
 				} catch (IOException e) {
 					System.out.println("There was an error writing the file to the server");
-				}
-				
+				}		
 				break;
 		}
 	}
