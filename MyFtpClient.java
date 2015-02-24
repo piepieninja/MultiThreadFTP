@@ -21,83 +21,93 @@ public class MyFtpClient {
 		beginCommunication();
 	}
 
+	public void clientPutFile(String userInput) throws Exception {
+		File file = new File(System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1));
+		System.out.println(System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1));
+		//Check if directory exists
+		if (!file.exists()) {
+			System.out.println("ERROR: That file does not exist");
+		} else if (file.exists()) {
+			// add stuff and things
+			byte [] fileByteArray  = new byte [(int)file.length()];
+			FileInputStream fis = new FileInputStream(file);
+			BufferedInputStream bis = new BufferedInputStream(fis);
+			bis.read(fileByteArray,0,fileByteArray.length);
+			OutputStream os = normalSocket.getOutputStream();
+			os.write(fileByteArray,0,fileByteArray.length);
+				os.flush();
+			fis.close();
+			bis.close();
+		}
+	}
+
+	public void clientGetFile(String userInput) throws Exception {
+		System.out.println("Executing get command client side");
+		normalOut.println(userInput);
+		System.out.println(normalIn.readLine());
+	}
+
+
+	public void routeCommand(String command) throws Exception {
+		normalOut.println(command);
+		String data = normalIn.readLine();
+
+    	if (command.equals("pwd")) {
+			//prints out the current directory
+			System.out.println(normalIn.readLine());
+		} else if (command.equals("ls")) {
+			//prints out all of the files in the current directory
+			//data = normalIn.readLine();
+			
+			//check if there are no files or directories in current directory
+			if (data.equals("")) {
+				System.out.print("");
+			} else {
+				data = data.replace("<&&newline&&>", "\n");
+				System.out.println(data.substring(0, data.length() - 1));
+			}
+
+		} else if (command.equals("cd")) {
+			//changes the directory to the specified directory
+			//data = normalIn.readLine();
+			if (data.equals("no directory")) {
+				System.out.println("ERROR: Directory does not exist");
+			} else if (data.equals("not a directory")) {
+				System.out.println("ERROR: That is not a directory");
+			}
+
+		} else if (command.equals("mkdir")) {
+			//creates a directory in the current directory
+			//data = normalIn.readLine();
+			if (data.equals("failure")) {
+				System.out.println("ERROR: Cannot create directory");
+			} 
+		} else if (command.equals("delete")) {
+			//deletes the specified file
+			if (data.equals("no file")) {
+				System.out.println("ERROR: File does not exist");
+			} else if (data.equals("failure")) {
+				System.out.println("ERROR: That is not a file");
+			}
+		} else if (command.equals("quit")) {
+			//close all streams and exit
+			normalIn.close();
+			terminateIn.close();
+			normalOut.close();
+			terminateOut.close();
+			stdIn.close();
+			System.exit(0);
+		}
+	}
+
 	public void sendCommand(String userInput ) throws Exception {
-		String data;
 		String command = userInput.split(" ")[0];
 		if (command.equals("put")) {
-			File file = new File(System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1));
-			System.out.println(System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1));
-			//Check if directory exists
-			if (!file.exists()) {
-				System.out.println("ERROR: That file does not exist");
-			} else if (file.exists()) {
-				// add stuff and things
-				byte [] fileByteArray  = new byte [(int)file.length()];
-				FileInputStream fis = new FileInputStream(file);
-				BufferedInputStream bis = new BufferedInputStream(fis);
-				bis.read(fileByteArray,0,fileByteArray.length);
-				OutputStream os = normalSocket.getOutputStream();
-				os.write(fileByteArray,0,fileByteArray.length);
-					os.flush();
-				fis.close();
-				bis.close();
-			} else {
-				System.out.println("ERROR: That is not a file.");
-			}
+			clientPutFile(userInput);
 		} else if (command.equals("get")) {
-			System.out.println("Executing get command client side");
-			normalOut.println(userInput);
-			System.out.println(normalIn.readLine());
+			clientGetFile(userInput);
 		} else {
-			normalOut.println(userInput);
-	    	if (command.equals("pwd")) {
-				//prints out the current directory
-				System.out.println(normalIn.readLine());
-
-			} else if (command.equals("ls")) {
-				//prints out all of the files in the current directory
-				data = normalIn.readLine();
-				
-				//check if there are no files or directories in current directory
-				if (data.equals("")) {
-					System.out.print("");
-				} else {
-					data = data.replace("<&&newline&&>", "\n");
-					System.out.println(data.substring(0, data.length() - 1));
-				}
-
-			} else if (command.equals("cd")) {
-				//changes the directory to the specified directory
-				data = normalIn.readLine();
-				if (data.equals("no directory")) {
-					System.out.println("ERROR: Directory does not exist");
-				} else if (data.equals("not a directory")) {
-					System.out.println("ERROR: That is not a directory");
-				}
-
-			} else if (command.equals("mkdir")) {
-				//creates a directory in the current directory
-				data = normalIn.readLine();
-				if (data.equals("failure")) {
-					System.out.println("ERROR: Cannot create directory");
-				} 
-			} else if (command.equals("delete")) {
-				//deletes the specified file
-				data = normalIn.readLine();
-				if (data.equals("no file")) {
-					System.out.println("ERROR: File does not exist");
-				} else if (data.equals("failure")) {
-					System.out.println("ERROR: That is not a file");
-				}
-			} else if (command.equals("quit")) {
-				//close all streams and exit
-				normalIn.close();
-				terminateIn.close();
-				normalOut.close();
-				terminateOut.close();
-				stdIn.close();
-				System.exit(0);
-			}
+			routeCommand(command);
 		}
 	}
 
