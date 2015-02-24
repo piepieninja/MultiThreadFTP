@@ -16,7 +16,6 @@ public class MyFtpClient {
     private static DataOutputStream dos;
     private static DataInputStream dis;
 
-
 	public MyFtpClient(String IP, int nport, int tport){
 		this.IP = IP;
 		this.nport = nport;
@@ -38,26 +37,8 @@ public class MyFtpClient {
 			normalOut.println((int)file.length());
 			normalIn.readLine();
 
-			/*int length = (int)file.length();
-			byte[] fileBytes = new byte[(int) length];
-			FileInputStream fis = new FileInputStream(file);
-    		BufferedInputStream bis = new BufferedInputStream(fis);
-    		BufferedOutputStream out = new BufferedOutputStream(normalSocket.getOutputStream());
-    		int count = 0;
-
-    		while ((count = bis.read(fileBytes)) > 0) {
-        		out.write(fileBytes, 0, count);
-    		}
-
-    		out.flush();
-    		out.close();
-    		fis.close();
-    		bis.close();
-    		normalSocket.getOutputStream().flush();*/
-
     		int fileSize = (int)file.length();
     		byte[] buffer = new byte[1000];
-
     		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
     		int count = 0;
 
