@@ -22,13 +22,18 @@ public class MyFtpClient {
 	}
 
 	public void clientPutFile(String userInput) throws Exception {
-		File file = new File(System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1));
-		System.out.println(System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1));
+		String fileName = System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1);
+		File file = new File(fileName);
 		//Check if directory exists
 		if (!file.exists()) {
 			System.out.println("ERROR: That file does not exist");
 		} else if (file.exists()) {
-			// add stuff and things
+			//send file name and length of file
+			normalOut.println(fileName);
+			stdIn.readLine();
+			normalOut.println((int)file.length());
+			stdIn.readLine();
+
 			byte [] fileByteArray  = new byte [(int)file.length()];
 			FileInputStream fis = new FileInputStream(file);
 			BufferedInputStream bis = new BufferedInputStream(fis);
