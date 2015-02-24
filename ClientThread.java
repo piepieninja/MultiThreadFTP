@@ -138,7 +138,6 @@ public class ClientThread implements Runnable {
 				//Checks to see if there was a file path
 				File dir = new File(currentPath + "/" + destPath);
 				System.out.println(currentPath);
-
 				//creates the new directory and returns success or failure
 				boolean t = dir.mkdir();
 				if (t) {
@@ -156,6 +155,8 @@ public class ClientThread implements Runnable {
 	private synchronized void routeCommand(String input) {
 		String[] inputs = input.split(" ");
 		String command = inputs[0];
+					System.out.println("INputs" +  inputs[0] + " " );
+
 		if(inputs.length > 1) {
 			destPath = inputs[1];
 		} 
