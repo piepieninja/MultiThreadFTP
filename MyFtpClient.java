@@ -60,7 +60,10 @@ public class MyFtpClient {
 		System.out.println(normalIn.readLine());
 	}
 
-
+	/**
+	 * Routes commands to the correct methods
+	 * @param userInput, the filtered input from the user
+	 */
 	public void routeCommand(String userInput) throws Exception {
 		if (userInput == null) {
 			return;
@@ -116,7 +119,11 @@ public class MyFtpClient {
 		}
 	}
 
-	public void sendCommand(String userInput ) throws Exception {
+	/**
+	 * Sends a command from the users input
+	 * @param userInput, a string that rempresents the 
+	 */
+	public void sendCommand(String userInput) throws Exception {
 		String command = userInput.split(" ")[0];
 		if (command.equals("put")) {
 			clientPutFile(userInput);
@@ -127,6 +134,9 @@ public class MyFtpClient {
 		}
 	}
 
+	/**
+	 * Builds all sockets for communication
+	 */
 	private void setupSocket() throws Exception{
 		 normalSocket = new Socket(IP, nport); //creates a socket to connect to the client port on the server
 		 terminateSocket = new Socket(IP, tport); //creates a socket to connect to the terminate port on the server
@@ -137,6 +147,9 @@ public class MyFtpClient {
          stdIn = new BufferedReader(new InputStreamReader(System.in)); //Input from the user
 	}
 
+	/**
+	 * The first method to run after MyFtpClient is instanciated	
+	 */
 	public void beginCommunication(){
 		try {
 			setupSocket();
@@ -168,6 +181,11 @@ public class MyFtpClient {
 		}
 	}
 
+	/**
+	 * parseInput will determine will return results to indicate valid commands
+	 * @param str, the input string to test for validity
+	 * @return short, a 1 to indicate a valid command, a 0 to indicate a terminate command, a -1 to indicate an invalid command
+	 */
 	public short parseInput(String str) {
 		ArrayList<String> commands = new ArrayList<String>(Arrays.asList("get", "delete", "ls", "pwd", "put", "cd", "mkdir", "quit"));
 		String cmd = str.split(" ")[0];
@@ -180,6 +198,10 @@ public class MyFtpClient {
 		}
 	}
 
+	/**
+	 * A wonderfull welcom
+	 * @return not AMY
+	 */
 	public static void printHello() {
 		System.out.println(" ___ _____ ___   ___ ___ _____   _____ ___ \n| __|_   _| _ \\ / __| __| _ \\ \\ / / __| _ \\\n| _|  | | |  _/ \\__ \\ _||   /\\ V /| _||   /\n|_|   |_| |_|   |___/___|_|_\\ \\_/ |___|_|_\\\n                                           ");
 	}
