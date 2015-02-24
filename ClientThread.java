@@ -151,23 +151,27 @@ public class ClientThread implements Runnable {
 	* Put a file from the client onto the server
 	*/
 	private void putFile() throws IOException {
-		int bytesRead, current;
+		int bytesRead = 0, current;
+		os.println("received put command");
 		String fileName = is.readLine();
 		os.println("received file name");
 		int fileSize = Integer.parseInt(is.readLine());
 		os.println("received file size");
-		byte[] fileArray = new byte[fileSize];
-		InputStream is = mySocket.getInputStream();
+		System.out.println("Got here");
+		
+		InputStream ist = mySocket.getInputStream();
 		FileOutputStream fos = new FileOutputStream(fileName);
-		BufferedOutputStream bos = new BufferedOutputStream(fos);
-		bytesRead = is.read(fileArray, 0, fileArray.length);
-		current = bytesRead;
-		while (bytesRead < fileSize) {
-			bytesRead = is.read(fileArray, current, (fileSize - current));
-			current += bytesRead;
-		}
-		bos.write(fileArray, 0, fileSize);
-		bos.flush();
+        BufferedOutputStream bos = new BufferedOutputStream(fos);
+        byte[] fileBytes = new byte[fileSize];
+
+        int count;
+
+    	while ((count = ist.read(fileBytes)) > 0) {
+        	bos.write(fileBytes, 0, count);
+    	}
+
+    	bos.flush();
+    	bos.close();
 	}
 
 	public void serverGetFile() {
@@ -194,7 +198,7 @@ public class ClientThread implements Runnable {
 		if(inputs.length > 1) {
 			destPath = inputs[1];
 		} 
-		switch(command){
+		switch(command) {
 			case "cd":
 				changeDirectory(destPath);
 				break;

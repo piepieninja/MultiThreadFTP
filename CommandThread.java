@@ -2,14 +2,12 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
-
 public class CommandThread implements Runnable {
 
 	Socket mySocket;
 	BufferedReader is;
     PrintStream os;
     boolean running;
-
 
     /**
      * The constructor for the ClientThread class
@@ -22,12 +20,6 @@ public class CommandThread implements Runnable {
 		this.is = is;
 		this.os = os;
 		this.running = true;
-		// try {
-		// 	is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	 //    	os = new PrintStream(clientSocket.getOutputStream());
-		// } catch (IOException ex) {
-		// 	System.out.println(ex);
-		// }
 	}
 
 	/**
@@ -36,7 +28,6 @@ public class CommandThread implements Runnable {
 	public void run() {
 		System.out.println("RUNNING COMMAND THREAD: " + "Threads" + Thread.activeCount() + "active");
 		String input;
-		synchronized(this){
 			try {
 				System.out.println("PRINTING FROM COMMAND THREAD");
 				os.println("Hello from the get thread");
@@ -46,8 +37,6 @@ public class CommandThread implements Runnable {
 			finally {
 				System.out.println("Command Finally");
 				running = false;
-					///notifyAll();
 			}
-		}
 	}
 }

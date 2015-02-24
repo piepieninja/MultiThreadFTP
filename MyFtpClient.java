@@ -28,21 +28,30 @@ public class MyFtpClient {
 		if (!file.exists()) {
 			System.out.println("ERROR: That file does not exist");
 		} else if (file.exists()) {
-			//send file name and length of file
-			normalOut.println(fileName);
-			stdIn.readLine();
+			//send command
+			normalOut.println(userInput.split(" ")[0]);
+			normalIn.readLine();
+			//send file name and length
+			normalOut.println(userInput.substring(userInput.indexOf(' ') + 1));
+			normalIn.readLine();
 			normalOut.println((int)file.length());
-			stdIn.readLine();
+			normalIn.readLine();
 
-			byte [] fileByteArray  = new byte [(int)file.length()];
+			int length = (int)file.length();
+			byte[] fileBytes = new byte[(int) length];
 			FileInputStream fis = new FileInputStream(file);
-			BufferedInputStream bis = new BufferedInputStream(fis);
-			bis.read(fileByteArray,0,fileByteArray.length);
-			OutputStream os = normalSocket.getOutputStream();
-			os.write(fileByteArray,0,fileByteArray.length);
-				os.flush();
-			fis.close();
-			bis.close();
+    		BufferedInputStream bis = new BufferedInputStream(fis);
+    		BufferedOutputStream out = new BufferedOutputStream(normalSocket.getOutputStream());
+    		int count = 0;
+
+    		while ((count = bis.read(fileBytes)) > 0) {
+        		out.write(fileBytes, 0, count);
+    		}
+
+    		out.flush();
+    		out.close();
+    		fis.close();
+    		bis.close();
 		}
 	}
 
