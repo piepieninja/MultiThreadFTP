@@ -158,7 +158,6 @@ public class ClientThread implements Runnable {
 		os.println("received put command");
 		int fileSize = Integer.parseInt(is.readLine());
 		os.println("received file size");
-		System.out.println("Got here");
 		
 		InputStream ist = mySocket.getInputStream();
 		FileOutputStream fos = new FileOutputStream(fileName);
@@ -205,6 +204,7 @@ public class ClientThread implements Runnable {
 		if(inputs.length > 1) {
 			destPath = inputs[1];
 		} 
+
 		switch(command) {
 			case "cd":
 				changeDirectory(destPath);

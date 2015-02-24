@@ -29,7 +29,7 @@ public class MyFtpClient {
 			System.out.println("ERROR: That file does not exist");
 		} else if (file.exists()) {
 			//send command
-			normalOut.println(userInput.split(" ")[0]);
+			normalOut.println(userInput);
 			normalIn.readLine();
 			//send file name and length
 			normalOut.println((int)file.length());
