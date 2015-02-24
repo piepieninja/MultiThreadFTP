@@ -12,7 +12,7 @@ public class ClientThread implements Runnable {
 	Socket mySocket;
 	BufferedReader is;
     PrintStream os;
-    String destPath, currentPath;
+    String currentPath;
     boolean running = true;
 
     /**
@@ -52,7 +52,7 @@ public class ClientThread implements Runnable {
 
 	/**
      * Checks for a valid command then attempts to navigate to that directory
-     * @param the destination directory
+     * @param destPath, the destination directory
      */
 	private void changeDirectory(String destPath) {
 		String absolutePath = System.getProperty("user.dir");
@@ -97,7 +97,7 @@ public class ClientThread implements Runnable {
 
 	/**
      * Checks for a valid command then attempts to delete to that file
-     * @param destPath the file desired to be deleted
+     * @param destPath, the file desired to be deleted
      */
 	private void deleteFile(String destPath){
 		File file = new File(currentPath + "/" + destPath);
@@ -115,8 +115,9 @@ public class ClientThread implements Runnable {
 
 	/**
 	 * Lists all the files in the present working directory
+	 * @param destPath, the destination directory
      */
-	private void listFiles(){
+	private void listFiles(String destPath){
 		File list = new File(currentPath);
 		if (list == null) {
 			os.println("");
@@ -132,9 +133,9 @@ public class ClientThread implements Runnable {
 
 	/**
      * Checks for a valid command then attempts to make that directory
-     * @param destPath the new desired name of the directory
+     * @param destPath, the new desired name of the directory
      */
-	private void makeDirectory(){
+	private void makeDirectory(String destPath){
 				//Checks to see if there was a file path
 				File dir = new File(currentPath + "/" + destPath);
 				System.out.println(currentPath);
@@ -149,8 +150,10 @@ public class ClientThread implements Runnable {
 
 	/**
 	* Put a file from the client onto the server
+	* @param fileName, the name of the file to put
+	* @param destPath, the destination directory
 	*/
-	private void putFile(String fileName) throws IOException {
+	private void putFile(String fileName, String destPath) throws IOException {
 		int bytesRead = 0, current;
 		os.println("received put command");
 		int fileSize = Integer.parseInt(is.readLine());
@@ -173,7 +176,11 @@ public class ClientThread implements Runnable {
     	ist.close();
 	}
 
-	public void serverGetFile() {
+	/**
+	* Gets a remote file from the server and gives it to the client
+	* @param destPath, the destination directory
+	*/
+	public void serverGetFile(String destPath) {
 		Thread commandThread = new Thread(new CommandThread(this.mySocket, "get", is, os));
 		System.out.println("THREAD ID " + commandThread.getId());
 		commandThread.start();
@@ -194,6 +201,7 @@ public class ClientThread implements Runnable {
 		System.out.println("Error: " + input);
 		String[] inputs = input.split(" ");
 		String command = inputs[0];
+		String destPath = null; 
 
 		if(inputs.length > 1) {
 			destPath = inputs[1];
@@ -206,10 +214,10 @@ public class ClientThread implements Runnable {
 				deleteFile(destPath);
 				break;
 			case "ls":
-				listFiles();
+				listFiles(destPath);
 	        	break;
 			case "mkdir":
-				makeDirectory();
+				makeDirectory(destPath);
 				break;
 			case "pwd":
 				os.println(currentPath);
@@ -218,11 +226,11 @@ public class ClientThread implements Runnable {
 				running = false;
 				break;
 			case "get":
-				serverGetFile();
+				serverGetFile(destPath);
 				break;
 			case "put":
 				try {
-					putFile(inputs[1]);
+					putFile(inputs[1], destPath);
 				} catch (IOException e) {
 					System.out.println("There was an error writing the file to the server");
 				}		
