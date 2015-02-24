@@ -13,6 +13,9 @@ public class MyFtpClient {
 	private static PrintWriter normalOut;
 	private static PrintWriter terminateOut;
     private static BufferedReader stdIn;
+    private static DataOutputStream dos;
+    private static DataInputStream dis;
+
 
 	public MyFtpClient(String IP, int nport, int tport){
 		this.IP = IP;
@@ -35,7 +38,7 @@ public class MyFtpClient {
 			normalOut.println((int)file.length());
 			normalIn.readLine();
 
-			int length = (int)file.length();
+			/*int length = (int)file.length();
 			byte[] fileBytes = new byte[(int) length];
 			FileInputStream fis = new FileInputStream(file);
     		BufferedInputStream bis = new BufferedInputStream(fis);
@@ -50,14 +53,44 @@ public class MyFtpClient {
     		out.close();
     		fis.close();
     		bis.close();
-    		normalOut.flush();
+    		normalSocket.getOutputStream().flush();*/
+
+    		int fileSize = (int)file.length();
+    		byte[] buffer = new byte[1000];
+
+    		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
+    		int count = 0;
+
+    		while((count = fs.read(buffer)) > 0) {
+				dos.write(buffer, 0, count);
+			}
+			fs.close();
 		}
 	}
 
 	public void clientGetFile(String userInput) throws Exception {
-		System.out.println("Executing get command client side");
 		normalOut.println(userInput);
-		System.out.println(normalIn.readLine());
+
+		String i = normalIn.readLine();
+		if (i.equals("file does not exist")) {
+			System.out.println("ERROR: That file does not exist");
+			normalOut.println("done");
+		} else if (i.equals("file exists")) {
+			normalOut.println("send file length");
+			int fileSize = Integer.parseInt(normalIn.readLine());
+			normalOut.println("send file");
+
+			String fileName = userInput.split(" ")[1];
+			FileOutputStream fStream = new FileOutputStream(new File(fileName));
+	    	byte[] buffer = new byte[1000];
+	    	int count = 0, rBytes = 0;
+	    	while (rBytes < fileSize) {
+	    		count = dis.read(buffer);
+	    		fStream.write(buffer, 0, count);
+	    		rBytes += count;
+	    	}
+	    	fStream.close();
+		}
 	}
 
 	/**
@@ -145,6 +178,8 @@ public class MyFtpClient {
 		 normalOut = new PrintWriter(normalSocket.getOutputStream(), true); //Output for each socket
     	 terminateOut = new PrintWriter(terminateSocket.getOutputStream(), true);
          stdIn = new BufferedReader(new InputStreamReader(System.in)); //Input from the user
+         dos = new DataOutputStream(normalSocket.getOutputStream()); //for transfering files
+         dis = new DataInputStream(normalSocket.getInputStream()); //for transfering files
 	}
 
 	/**

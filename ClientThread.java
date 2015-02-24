@@ -12,6 +12,8 @@ public class ClientThread implements Runnable {
 	Socket mySocket;
 	BufferedReader is;
     PrintStream os;
+    DataInputStream dis;
+    DataOutputStream dos;
     String currentPath;
     boolean running = true;
 
@@ -27,6 +29,8 @@ public class ClientThread implements Runnable {
 		try {
 			is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	    	os = new PrintStream(clientSocket.getOutputStream());
+	    	dis = new DataInputStream(clientSocket.getInputStream());
+	    	dos = new DataOutputStream(clientSocket.getOutputStream());
 		} catch (IOException ex) {
 			System.out.println(ex);
 		}
@@ -38,7 +42,7 @@ public class ClientThread implements Runnable {
 	 *Overridden method to allow us to use this class in a thread
 	 */
 	public void run() {
-		String input;
+		String input = "";
 		try {
 			while (running) {
 				input = is.readLine();
@@ -153,13 +157,12 @@ public class ClientThread implements Runnable {
 	* @param fileName, the name of the file to put
 	* @param destPath, the destination directory
 	*/
-	private void putFile(String fileName, String destPath) throws IOException {
-		int bytesRead = 0, current;
+	private void putFile(String fileName, String destPath) throws Exception {
 		os.println("received put command");
 		int fileSize = Integer.parseInt(is.readLine());
 		os.println("received file size");
 		
-		InputStream ist = mySocket.getInputStream();
+		/*InputStream ist = mySocket.getInputStream();
 		FileOutputStream fos = new FileOutputStream(fileName);
         BufferedOutputStream bos = new BufferedOutputStream(fos);
         byte[] fileBytes = new byte[fileSize];
@@ -172,15 +175,25 @@ public class ClientThread implements Runnable {
 
     	bos.flush();
     	bos.close();
-    	ist.close();
+    	ist.close();*/
+
+    	FileOutputStream fStream = new FileOutputStream(new File(fileName));
+    	byte[] buffer = new byte[1000];
+    	int count = 0, rBytes = 0;
+    	while (rBytes < fileSize) {
+    		count = dis.read(buffer);
+    		fStream.write(buffer, 0, count);
+    		rBytes += count;
+    	}
+    	fStream.close();
 	}
 
 	/**
 	* Gets a remote file from the server and gives it to the client
 	* @param destPath, the destination directory
 	*/
-	public void serverGetFile(String destPath) {
-		Thread commandThread = new Thread(new CommandThread(this.mySocket, "get", is, os));
+	public void serverGetFile(String fileName, String destPath) throws Exception {
+		/*Thread commandThread = new Thread(new CommandThread(this.mySocket, "get", is, os));
 		System.out.println("THREAD ID " + commandThread.getId());
 		commandThread.start();
 		try{
@@ -188,7 +201,32 @@ public class ClientThread implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		 System.out.println("RESUMING CLIENT THREAD");
+		System.out.println("RESUMING CLIENT THREAD");*/
+
+		File file = new File(fileName);
+		if (!file.exists()) {
+			os.println("file does not exist");
+		} else if (file.exists()) {
+			os.println("file exists");
+		}
+
+		String i = is.readLine();
+		if (i.equals("done")) {
+			return;
+		} else if (i.equals("send file length")) {
+			os.println((int)file.length());
+			is.readLine(); //client sends "send file"
+
+			byte[] buffer = new byte[1000];
+			BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
+    		int count = 0;
+
+    		while((count = fs.read(buffer)) > 0) {
+				dos.write(buffer, 0, count);
+			}
+			fs.close();
+		}
+
 	}
 
 	/**
@@ -197,6 +235,10 @@ public class ClientThread implements Runnable {
      * @return an instance of ClientThread instantiated with the current path and configured IO streams
      */
 	private synchronized void routeCommand(String input) {
+		if (input == null) {
+			return;
+		}
+
 		String[] inputs = input.split(" ");
 		String command = inputs[0];
 		String destPath = null; 
@@ -225,12 +267,16 @@ public class ClientThread implements Runnable {
 				running = false;
 				break;
 			case "get":
-				serverGetFile(destPath);
+				try {
+					serverGetFile(inputs[1], destPath);
+				} catch (Exception e) {
+					System.out.println("There was an error getting the file from the server");
+				}
 				break;
 			case "put":
 				try {
 					putFile(inputs[1], destPath);
-				} catch (IOException e) {
+				} catch (Exception e) {
 					System.out.println("There was an error writing the file to the server");
 				}		
 				break;
