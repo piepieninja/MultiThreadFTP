@@ -184,16 +184,16 @@ public class ClientThread implements Runnable {
 				//Send threads id back to client
 				//Start thread 
 				//send hello from within the thread
-				// Thread commandThread = new Thread(new CommandThread(this.mySocket, "get"));
-				// os.println(commandThread.getId());
-				// System.out.println("THREAD ID " + commandThread.getId());
-				// try{
-				// 	commandThread.start();
-				// 	wait();
+				Thread commandThread = new Thread(new CommandThread(this.mySocket, "get"));
+				os.println(commandThread.getId());
+				System.out.println("THREAD ID " + commandThread.getId());
+				try{
+				 	commandThread.start();
+				 	wait(); //Waiting for command thread to notify
 
-				// } catch(Exception e) {
-				// 	System.out.println("INtereupted exception");
-				// }
+				 } catch(Exception e) {
+				 	System.out.println("INtereupted exception");
+				 }
 				System.out.println("Executing get command server side");
 				os.println("You entered the get command");
 				break;
