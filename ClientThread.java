@@ -159,7 +159,6 @@ public class ClientThread implements Runnable {
 		try{
 			commandThread.join();
 		} catch (InterruptedException consumed) {
-			//e.printStackTrace();
 			System.out.println("Command thread Interrupted");
 		}
 		 System.out.println("6) Resuming ClientThread");

@@ -20,7 +20,7 @@ public class TerminateManager implements Runnable {
 			//new stuff
 			terminateSocket = new ServerSocket(port);
 			while(true){
-				System.out.println("Connected to Terminate Manage");
+			
 				Socket socket = terminateSocket.accept(); //ServerSocket returns a new socket on an unspecified port Client instantiates one	
 				try {
 					is = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -30,9 +30,11 @@ public class TerminateManager implements Runnable {
 				}
 
 				long threadId = Long.parseLong(is.readLine().split(" ")[1]);
-				
+				System.out.println("Terminator got command");
 				for(Thread thread : Thread.getAllStackTraces().keySet()) {
+					System.out.println("Thread: " + thread.getId());
 					if(thread.getId() == threadId) {
+						System.out.println("Interrupted that shit!");
 						thread.interrupt();
 					}
 				}
