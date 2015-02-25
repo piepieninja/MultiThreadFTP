@@ -35,16 +35,16 @@ public class BackgroundThread implements Runnable {
 
 	public void getFile(String userInput) {
 		try{
-			//System.out.println("2) Should be able to send more commands now" );
 			normalOut.println(userInput);
+			System.out.println("Get Command ID: " + normalIn.readLine());
 			String i = normalIn.readLine();
 			if (i.equals("file does not exist")) {
+				System.out.println("ERROR: That file does not exist");
 				normalOut.println("done");
 			} else if (i.equals("file exists")) {
 				normalOut.println("send file length");
 				int fileSize = Integer.parseInt(normalIn.readLine());
 				normalOut.println("send file");
-
 				String fileName = userInput.split(" ")[1];
 				FileOutputStream fStream = new FileOutputStream(new File(fileName));
 		    	byte[] buffer = new byte[1000];
@@ -65,21 +65,18 @@ public class BackgroundThread implements Runnable {
 
 	public void putFile(String userInput){
 		try{
-			//System.out.println("3) Should be able to send more commands now userInput is " + userInput);
-			String fileName = System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1);
+			String fileName = System.getProperty("user.dir") + "/" + userInput.split(" ")[1];
+			normalOut.println(userInput);
 			File file = new File(fileName);
 			//Check if directory exists
 			if (!file.exists()) {
-
+				System.out.println("ERROR: That file does not exist");
 			} else if (file.exists()) {
-				//send command
-				normalOut.println(userInput);
-				normalIn.readLine();
-				//send file name and length
-				//System.out.println("hello from put file");
+				//receive command ID
+				System.out.println("Put Command ID: " + normalIn.readLine());
+				//send file length
 				normalOut.println((int)file.length());
 				normalIn.readLine();
-
 	    		int fileSize = (int)file.length();
 	    		byte[] buffer = new byte[1000];
 	    		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
@@ -88,7 +85,6 @@ public class BackgroundThread implements Runnable {
 	    		while((count = fs.read(buffer)) > 0) {
 					dos.write(buffer, 0, count);
 				}
-				normalOut.println(" ");//THIS PROBS DONT WORK
 				fs.close();
 			}
 		} catch (Exception e) {

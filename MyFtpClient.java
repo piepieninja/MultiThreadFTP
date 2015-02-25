@@ -56,6 +56,7 @@ public class MyFtpClient {
 			System.out.println("ERROR: That file does not exist");
 			normalOut.println("done");
 		} else if (i.equals("file exists")) {
+			System.out.println("You got here.");
 			normalOut.println("send file length");
 			int fileSize = Integer.parseInt(normalIn.readLine());
 			normalOut.println("send file");
@@ -134,6 +135,11 @@ public class MyFtpClient {
 	public void startBackgroundJob(String userInputs) {
 		Thread backgroundThread = new Thread(new BackgroundThread(this.normalSocket, userInputs));
 		backgroundThread.start();
+		try {
+			Thread.sleep(100);
+		} catch (Exception e) {
+
+		}
 	}
 
 	/**
