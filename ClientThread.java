@@ -152,7 +152,7 @@ public class ClientThread implements Runnable {
 	*/
 	 public void startCommandThread(String[] inputs) {
 	 	System.out.println("Starting command thread");
-		Thread commandThread = new Thread(new CommandThread(this.mySocket, inputs));
+		Thread commandThread = new Thread(new CommandThread(this.mySocket, inputs, currentPath));
 		System.out.println("2) thread id is " + commandThread.getId());
 		os.println(commandThread.getId());
 		commandThread.start();

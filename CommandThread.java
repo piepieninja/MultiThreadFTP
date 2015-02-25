@@ -9,6 +9,7 @@ public class CommandThread implements Runnable {
     DataOutputStream dos;
     DataInputStream dis;
     String[] inputs;
+    String currentPath;
 
     /**
      * The constructor for the ClientThread class
@@ -16,14 +17,15 @@ public class CommandThread implements Runnable {
      * @param cmd the command being processed by the command thread
      * @return an instance of ClientThread instantiated with the current path and configured IO streams
      */
-	public CommandThread(Socket clientSocket, String[] inputs) {
+	public CommandThread(Socket clientSocket, String[] inputs, String path) {
 		System.out.println("1) created command thread");
 		try {
 			is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	    	os = new PrintStream(clientSocket.getOutputStream());
 	    	dos = new DataOutputStream(clientSocket.getOutputStream());
 			dis = new DataInputStream(clientSocket.getInputStream());
-			this.inputs = inputs;			
+			this.inputs = inputs;
+			this.currentPath = path;		
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -35,7 +37,7 @@ public class CommandThread implements Runnable {
 	*/
 	public void getFile(String fileName){
 		try{
-			File file = new File(fileName);
+			File file = new File(currentPath + "/" + fileName);
 			if (!file.exists()) {
 				os.println("file does not exist");
 			} else if (file.exists()) {
@@ -72,7 +74,7 @@ public class CommandThread implements Runnable {
 			os.println("received put command");
 			int fileSize = Integer.parseInt(is.readLine());
 			//os.println("received file size");
-	    	FileOutputStream fStream = new FileOutputStream(new File(fileName));
+	    	FileOutputStream fStream = new FileOutputStream(new File(currentPath + "/" + fileName));
 	    	byte[] buffer = new byte[1000];
 	    	int count = 0, rBytes = 0;
 	    	while (rBytes < fileSize) {

@@ -14,7 +14,6 @@ public class TerminateManager implements Runnable {
 	public void run() {
 		try {
 			terminateSocket = new ServerSocket(port);
-
 		} catch (Exception e) {
 			System.out.printf("There was an error creating the socket");
 		}
