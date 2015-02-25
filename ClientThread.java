@@ -49,6 +49,70 @@ public class ClientThread implements Runnable {
 	}
 
 	/**
+     * Determines which method needs to be executed given the clients input
+     * @param input the command provided by the client
+     * @return an instance of ClientThread instantiated with the current path and configured IO streams
+     */
+	private synchronized void routeCommand(String input) {
+		if (input == null) { //DO we need this anymore?
+			return;
+		}
+		String[] inputs = input.split(" ");
+		String command = inputs[0];
+		String destPath = null; 
+
+		if(inputs.length > 1) {
+			destPath = inputs[1];
+		} 
+
+		System.out.println("Routing inputs " + inputs.length  + " command " + command);
+
+		switch(command) {
+			case "cd":
+				changeDirectory(destPath);
+				break;
+			case "delete":
+				deleteFile(destPath);
+				break;
+			case "ls":
+				listFiles(destPath);
+	        	break;
+			case "mkdir":
+				makeDirectory(destPath);
+				break;
+			case "pwd":
+				os.println(currentPath);
+				break;
+			case "quit":
+				running = false;
+				break;
+			case "put":
+			case "get":
+				startCommandThread(inputs);
+				break;
+		}
+	}
+
+	/**
+	* Spins off a sperate thread to handle get and put requests
+	* @param inputs, an array containing the command and its arguments
+	*/
+	 public void startCommandThread(String[] inputs) {
+	 	System.out.println("Starting command thread");
+		Thread commandThread = new Thread(new CommandThread(this.mySocket, inputs, currentPath));
+		System.out.println("2) thread id is " + commandThread.getId());
+		os.println(commandThread.getId());
+		commandThread.start();
+		try{
+			commandThread.join();
+		} catch (InterruptedException consumed) {
+			System.out.println("Command thread Interrupted");
+		}
+		 System.out.println("6) Resuming ClientThread");
+		 //System.out.println("7) Started command thread: there are " + Thread.activeCount() + " threads active");
+	 }
+
+	/**
      * Checks for a valid command then attempts to navigate to that directory
      * @param destPath, the destination directory
      */
@@ -144,69 +208,5 @@ public class ClientThread implements Runnable {
 				} else {
 					os.println("failure");
 				}
-	}
-
-	/**
-	* Spins off a sperate thread to handle get and put requests
-	* @param inputs, an array containing the command and its arguments
-	*/
-	 public void startCommandThread(String[] inputs) {
-	 	System.out.println("Starting command thread");
-		Thread commandThread = new Thread(new CommandThread(this.mySocket, inputs, currentPath));
-		System.out.println("2) thread id is " + commandThread.getId());
-		os.println(commandThread.getId());
-		commandThread.start();
-		try{
-			commandThread.join();
-		} catch (InterruptedException consumed) {
-			System.out.println("Command thread Interrupted");
-		}
-		 System.out.println("6) Resuming ClientThread");
-		 //System.out.println("7) Started command thread: there are " + Thread.activeCount() + " threads active");
-	 }
-
-	/**
-     * Determines which method needs to be executed given the clients input
-     * @param input the command provided by the client
-     * @return an instance of ClientThread instantiated with the current path and configured IO streams
-     */
-	private synchronized void routeCommand(String input) {
-		if (input == null) { //DO we need this anymore?
-			return;
-		}
-		String[] inputs = input.split(" ");
-		String command = inputs[0];
-		String destPath = null; 
-
-		if(inputs.length > 1) {
-			destPath = inputs[1];
-		} 
-
-				System.out.println("Routing inputs " + inputs.length  + " command " + command);
-
-		switch(command) {
-			case "cd":
-				changeDirectory(destPath);
-				break;
-			case "delete":
-				deleteFile(destPath);
-				break;
-			case "ls":
-				listFiles(destPath);
-	        	break;
-			case "mkdir":
-				makeDirectory(destPath);
-				break;
-			case "pwd":
-				os.println(currentPath);
-				break;
-			case "quit":
-				running = false;
-				break;
-			case "put":
-			case "get":
-				startCommandThread(inputs);
-				break;
-		}
 	}
 }

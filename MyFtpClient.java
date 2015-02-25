@@ -23,6 +23,65 @@ public class MyFtpClient {
 		beginCommunication();
 	}
 
+	/**
+	 * The first method to run after MyFtpClient is instanciated	
+	 */
+	public void beginCommunication(){
+		try {
+			setupSocket();
+			String userInput;
+			short sh;
+			while(true) {
+				System.out.print("myftp> ");
+				userInput = stdIn.readLine();
+				sh = parseInput(userInput);
+				switch (sh) {
+					case -1:
+						System.out.println("ERROR: invalid command");
+						break;
+					case 0:
+						terminateOut.println(userInput);
+						break;
+					case 1:
+						sendCommand(userInput);
+						break;
+					default:
+						System.err.println("error parsing input");
+						System.exit(1);
+						break;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("There was an error creating the sockets\n" + e);
+		}
+	}
+
+	/**
+	 * Sends a command from the users input
+	 * @param userInput, a string that rempresents the 
+	 */
+	public void sendCommand(String userInput) throws Exception {
+		String command = userInput.split(" ")[0];
+		if (userInput.contains("&")) {
+			startBackgroundJob(userInput);
+		} else if (command.equals("get")) {
+			clientGetFile(userInput);
+		} else if (command.equals("put")){
+			clientPutFile(userInput);
+		} else {
+			routeCommand(userInput);
+		}
+		//System.out.println("returning from send command");
+	}
+
+	public void startBackgroundJob(String userInputs) {
+		Thread backgroundThread = new Thread(new BackgroundThread(this.normalSocket, userInputs));
+		backgroundThread.start();
+		try {
+			Thread.sleep(100);
+		} catch (Exception e) {System.out.println(e);}
+	}
+
 	public void clientPutFile(String userInput) throws Exception {
 		String fileName = System.getProperty("user.dir") + "/" + userInput.split(" ")[1];
 		normalOut.println(userInput);
@@ -56,7 +115,6 @@ public class MyFtpClient {
 			System.out.println("ERROR: That file does not exist");
 			normalOut.println("done");
 		} else if (i.equals("file exists")) {
-			System.out.println("You got here.");
 			normalOut.println("send file length");
 			int fileSize = Integer.parseInt(normalIn.readLine());
 			normalOut.println("send file");
@@ -132,34 +190,6 @@ public class MyFtpClient {
 		}
 	}
 
-	public void startBackgroundJob(String userInputs) {
-		Thread backgroundThread = new Thread(new BackgroundThread(this.normalSocket, userInputs));
-		backgroundThread.start();
-		try {
-			Thread.sleep(100);
-		} catch (Exception e) {
-
-		}
-	}
-
-	/**
-	 * Sends a command from the users input
-	 * @param userInput, a string that rempresents the 
-	 */
-	public void sendCommand(String userInput) throws Exception {
-		String command = userInput.split(" ")[0];
-		if (userInput.contains("&")) {
-			startBackgroundJob(userInput);
-		} else if (command.equals("get")) {
-			clientGetFile(userInput);
-		} else if (command.equals("put")){
-			clientPutFile(userInput);
-		} else {
-			routeCommand(userInput);
-		}
-		//System.out.println("returning from send command");
-	}
-
 	/**
 	 * Builds all sockets for communication
 	 */
@@ -173,41 +203,6 @@ public class MyFtpClient {
          stdIn = new BufferedReader(new InputStreamReader(System.in)); //Input from the user
          dos = new DataOutputStream(normalSocket.getOutputStream()); //for transfering files
          dis = new DataInputStream(normalSocket.getInputStream()); //for transfering files
-	}
-
-	/**
-	 * The first method to run after MyFtpClient is instanciated	
-	 */
-	public void beginCommunication(){
-		try {
-			setupSocket();
-			String userInput;
-			short sh;
-			while(true) {
-				System.out.print("myftp> ");
-				userInput = stdIn.readLine();
-
-				sh = parseInput(userInput);
-				switch (sh) {
-					case -1:
-						System.out.println("ERROR: invalid command");
-						break;
-					case 0:
-
-						terminateOut.println(userInput);
-						break;
-					case 1:
-						sendCommand(userInput);
-						break;
-					default:
-						System.err.println("error parsing input");
-						System.exit(1);
-						break;
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("There was an error creating the sockets\n" + e);
-		}
 	}
 
 	/**
@@ -252,5 +247,5 @@ public class MyFtpClient {
 
 		MyFtpClient ftp = new MyFtpClient("localhost", 5555, 5556);
 	}
-
 }
+

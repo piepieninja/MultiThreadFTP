@@ -33,6 +33,25 @@ public class BackgroundThread implements Runnable {
 		}
 	}
 
+	/**
+	 * Overidden to implement the Runnable interface
+	 */
+	public void run() {
+		//System.out.println("1) Running a BackgroundThread in the background");
+		String cmd = this.inputs[0];
+		String fileName = this.inputs[1];
+		//Goes into an infinite loop if we use if else statements, why?
+		switch(cmd) {
+			case "get":
+				getFile(cmd + " " + fileName);
+				break;
+			case "put":
+				putFile(cmd + " " +fileName);
+				break;
+		}
+		//System.out.println("4) Terminating command in background");
+	}
+
 	public void getFile(String userInput) {
 		try{
 			normalOut.println(userInput);
@@ -57,12 +76,10 @@ public class BackgroundThread implements Runnable {
 		    	fStream.close();
 			}
 		} catch (Exception e) {
-
+			System.out.println(e);
 		}
-		
 	}
 	
-
 	public void putFile(String userInput){
 		try{
 			String fileName = System.getProperty("user.dir") + "/" + userInput.split(" ")[1];
@@ -87,29 +104,6 @@ public class BackgroundThread implements Runnable {
 				}
 				fs.close();
 			}
-		} catch (Exception e) {
-
-		}
-	
-	}
-
-
-	/**
-	 * Overidden to implement the Runnable interface
-	 */
-	public void run() {
-		//System.out.println("1) Running a BackgroundThread in the background");
-		String cmd = this.inputs[0];
-		String fileName = this.inputs[1];
-		//Goes into an infinite loop if we use if else statements, why?
-		switch(cmd) {
-			case "get":
-				getFile(fileName);
-				break;
-			case "put":
-				putFile(cmd + " " +fileName);
-				break;
-		}
-		//System.out.println("4) Terminating command in background");
+		} catch (Exception e) { System.out.println(e);}
 	}
 }
