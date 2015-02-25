@@ -25,18 +25,17 @@ public class MyFtpClient {
 
 	public void clientPutFile(String userInput) throws Exception {
 		String fileName = System.getProperty("user.dir") + "/" + userInput.split(" ")[1];
+		normalOut.println(userInput);
 		File file = new File(fileName);
 		//Check if directory exists
 		if (!file.exists()) {
 			System.out.println("ERROR: That file does not exist");
 		} else if (file.exists()) {
-			//send command
-			normalOut.println(userInput);
-			normalIn.readLine();
-			//send file name and length
+			//receive command ID
+			System.out.println("Put Command ID: " + normalIn.readLine());
+			//send file length
 			normalOut.println((int)file.length());
 			normalIn.readLine();
-
     		int fileSize = (int)file.length();
     		byte[] buffer = new byte[1000];
     		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
@@ -51,7 +50,7 @@ public class MyFtpClient {
 
 	public void clientGetFile(String userInput) throws Exception {
 		normalOut.println(userInput);
-
+		System.out.println("Get Command ID: " + normalIn.readLine());
 		String i = normalIn.readLine();
 		if (i.equals("file does not exist")) {
 			System.out.println("ERROR: That file does not exist");
@@ -60,7 +59,6 @@ public class MyFtpClient {
 			normalOut.println("send file length");
 			int fileSize = Integer.parseInt(normalIn.readLine());
 			normalOut.println("send file");
-
 			String fileName = userInput.split(" ")[1];
 			FileOutputStream fStream = new FileOutputStream(new File(fileName));
 	    	byte[] buffer = new byte[1000];

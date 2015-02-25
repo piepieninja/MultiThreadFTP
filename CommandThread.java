@@ -82,7 +82,7 @@ public class CommandThread implements Runnable {
 	    		rBytes += count;
 	    	}
 	    	fStream.close();
-	    	System.out.println("4) completed puteFile");
+	    	System.out.println("4) completed puteFile");	
 		} catch(Exception e) {
 			System.out.println("there was an error putting your file");
 		}
