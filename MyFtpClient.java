@@ -187,7 +187,8 @@ public class MyFtpClient {
 						System.out.println("ERROR: invalid command");
 						break;
 					case 0:
-						terminateOut.println("terminate");
+
+						terminateOut.println(userInput);
 						break;
 					case 1:
 						sendCommand(userInput);

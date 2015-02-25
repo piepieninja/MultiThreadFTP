@@ -49,6 +49,7 @@ public class BackgroundThread implements Runnable {
 				FileOutputStream fStream = new FileOutputStream(new File(fileName));
 		    	byte[] buffer = new byte[1000];
 		    	int count = 0, rBytes = 0;
+		    	Thread.sleep(10000);
 		    	while (rBytes < fileSize) {
 		    		count = dis.read(buffer);
 		    		fStream.write(buffer, 0, count);
