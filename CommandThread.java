@@ -93,19 +93,28 @@ public class CommandThread implements Runnable {
 	 * Overidden to implement the Runnable interface
 	 */
 	public void run() {
-		System.out.println("3) Started command thread: there are " + Thread.activeCount() + " threads active");
-		String cmd = this.inputs[0];
-		String fileName = this.inputs[1];
-		//Goes into an infinite loop if we use if else statements, why?
-		switch(cmd) {
-			case "get":
-				getFile(fileName);
-				break;
-			case "put":
-				System.out.println("got into running");
-				putFile(fileName);
-				break;
+		try{
+			System.out.println("3) Started command thread: there are " + Thread.activeCount() + " threads active");
+			String cmd = this.inputs[0];
+			String fileName = this.inputs[1];
+			//Goes into an infinite loop if we use if else statements, why?
+			switch(cmd) {
+				case "get":
+					getFile(fileName);
+					break;
+				case "put":
+					System.out.println("got into running");
+					putFile(fileName);
+					break;
+			}
+			System.out.println("5) Terminating command thread");
+		} catch (Exception consumed) {
+			//Thread.currentThread().interrupt();
+			//System.out.println("INterrupted thread woo hoo");
+			//return;
+
 		}
-		System.out.println("5) Terminating command thread");
+
+
 	}
 }
