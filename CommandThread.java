@@ -71,7 +71,7 @@ public class CommandThread implements Runnable {
 	*/
 	private void putFile(String fileName) {
 		try{
-			os.println("received put command");
+			//os.println("received put command");
 			int fileSize = Integer.parseInt(is.readLine());
 			//os.println("received file size");
 	    	FileOutputStream fStream = new FileOutputStream(new File(currentPath + "/" + fileName));

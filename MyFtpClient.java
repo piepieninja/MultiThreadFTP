@@ -35,7 +35,7 @@ public class MyFtpClient {
 			System.out.println("Put Command ID: " + normalIn.readLine());
 			//send file length
 			normalOut.println((int)file.length());
-			normalIn.readLine();
+			//normalIn.readLine();
     		int fileSize = (int)file.length();
     		byte[] buffer = new byte[1000];
     		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
