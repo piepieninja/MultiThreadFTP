@@ -4,6 +4,7 @@ all:
 	javac ClientThread.java
 	javac ClientManager.java
 	javac TerminateManager.java
+	javac BackgroundThread.java
 	javac MyFtpServer.java
 	javac MyFtpClient.java
 server:

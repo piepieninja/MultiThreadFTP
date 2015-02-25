@@ -69,6 +69,7 @@ public class CommandThread implements Runnable {
 	*/
 	private void putFile(String fileName) {
 		try{
+			System.out.println("Hell from inside the put file");
 			os.println("received put command");
 			int fileSize = Integer.parseInt(is.readLine());
 			os.println("received file size");
@@ -100,6 +101,7 @@ public class CommandThread implements Runnable {
 				getFile(fileName);
 				break;
 			case "put":
+				System.out.println("got into running");
 				putFile(fileName);
 				break;
 		}

@@ -24,7 +24,7 @@ public class MyFtpClient {
 	}
 
 	public void clientPutFile(String userInput) throws Exception {
-		String fileName = System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1);
+		String fileName = System.getProperty("user.dir") + "/" + userInput.split(" ")[1];
 		File file = new File(fileName);
 		//Check if directory exists
 		if (!file.exists()) {
@@ -133,19 +133,29 @@ public class MyFtpClient {
 		}
 	}
 
+	public void startBackgroundJob(String userInputs) {
+		Thread backgroundThread = new Thread(new BackgroundThread(this.normalSocket, userInputs));
+		System.out.println("1) thread id is " + backgroundThread.getId());
+		backgroundThread.start();
+		System.out.println("returning from background job");
+	}
+
 	/**
 	 * Sends a command from the users input
 	 * @param userInput, a string that rempresents the 
 	 */
 	public void sendCommand(String userInput) throws Exception {
 		String command = userInput.split(" ")[0];
-		if (command.equals("put")) {
-			clientPutFile(userInput);
+		if (userInput.contains("&")) {
+			startBackgroundJob(userInput);
 		} else if (command.equals("get")) {
 			clientGetFile(userInput);
+		} else if (command.equals("put")){
+			clientPutFile(userInput);
 		} else {
 			routeCommand(userInput);
 		}
+		System.out.println("returning from send command");
 	}
 
 	/**
@@ -185,6 +195,7 @@ public class MyFtpClient {
 						break;
 					case 1:
 						sendCommand(userInput);
+						System.out.println("back in beginCommunication");
 						break;
 					default:
 						System.err.println("error parsing input");

@@ -151,6 +151,7 @@ public class ClientThread implements Runnable {
 	* @param inputs, an array containing the command and its arguments
 	*/
 	 public void startCommandThread(String[] inputs) {
+	 	System.out.println("Starting command thread");
 		Thread commandThread = new Thread(new CommandThread(this.mySocket, inputs));
 		System.out.println("2) thread id is " + commandThread.getId());
 		commandThread.start();
@@ -160,7 +161,7 @@ public class ClientThread implements Runnable {
 			e.printStackTrace();
 		}
 		 System.out.println("6) Resuming ClientThread");
-		 System.out.println("7) Started command thread: there are " + Thread.activeCount() + " threads active");
+		 //System.out.println("7) Started command thread: there are " + Thread.activeCount() + " threads active");
 	 }
 
 	/**
@@ -179,6 +180,8 @@ public class ClientThread implements Runnable {
 		if(inputs.length > 1) {
 			destPath = inputs[1];
 		} 
+
+				System.out.println("Routing inputs " + inputs.length  + " command " + command);
 
 		switch(command) {
 			case "cd":
