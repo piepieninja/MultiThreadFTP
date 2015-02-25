@@ -133,9 +133,7 @@ public class MyFtpClient {
 
 	public void startBackgroundJob(String userInputs) {
 		Thread backgroundThread = new Thread(new BackgroundThread(this.normalSocket, userInputs));
-		System.out.println("1) thread id is " + backgroundThread.getId());
 		backgroundThread.start();
-		System.out.println("returning from background job");
 	}
 
 	/**
@@ -153,7 +151,7 @@ public class MyFtpClient {
 		} else {
 			routeCommand(userInput);
 		}
-		System.out.println("returning from send command");
+		//System.out.println("returning from send command");
 	}
 
 	/**
@@ -193,7 +191,6 @@ public class MyFtpClient {
 						break;
 					case 1:
 						sendCommand(userInput);
-						System.out.println("back in beginCommunication");
 						break;
 					default:
 						System.err.println("error parsing input");

@@ -27,7 +27,7 @@ public class BackgroundThread implements Runnable {
 			normalIn = new BufferedReader( new InputStreamReader(normalSocket.getInputStream())); //Input for each socket
 			normalOut = new PrintWriter(normalSocket.getOutputStream(), true); //Output for each socket
 			inputs = userInput.split(" ");		
-			System.out.println("User input is " + userInput);//right here user input is gucci	
+			//System.out.println("User input is " + userInput);//right here user input is gucci	
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -35,7 +35,7 @@ public class BackgroundThread implements Runnable {
 
 	public void getFile(String userInput) {
 		try{
-			System.out.println("2) Should be able to send more commands now" );
+			//System.out.println("2) Should be able to send more commands now" );
 			normalOut.println(userInput);
 			String i = normalIn.readLine();
 			if (i.equals("file does not exist")) {
@@ -65,7 +65,7 @@ public class BackgroundThread implements Runnable {
 
 	public void putFile(String userInput){
 		try{
-			System.out.println("3) Should be able to send more commands now userInput is " + userInput);
+			//System.out.println("3) Should be able to send more commands now userInput is " + userInput);
 			String fileName = System.getProperty("user.dir") + "/" + userInput.substring(userInput.indexOf(' ') + 1);
 			File file = new File(fileName);
 			//Check if directory exists
@@ -76,7 +76,7 @@ public class BackgroundThread implements Runnable {
 				normalOut.println(userInput);
 				normalIn.readLine();
 				//send file name and length
-				System.out.println("hello from put file");
+				//System.out.println("hello from put file");
 				normalOut.println((int)file.length());
 				normalIn.readLine();
 
@@ -102,7 +102,7 @@ public class BackgroundThread implements Runnable {
 	 * Overidden to implement the Runnable interface
 	 */
 	public void run() {
-		System.out.println("1) Running a BackgroundThread in the background");
+		//System.out.println("1) Running a BackgroundThread in the background");
 		String cmd = this.inputs[0];
 		String fileName = this.inputs[1];
 		//Goes into an infinite loop if we use if else statements, why?
@@ -114,6 +114,6 @@ public class BackgroundThread implements Runnable {
 				putFile(cmd + " " +fileName);
 				break;
 		}
-		System.out.println("4) Terminating command in background");
+		//System.out.println("4) Terminating command in background");
 	}
 }
