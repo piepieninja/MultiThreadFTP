@@ -69,6 +69,7 @@ public class BackgroundThread implements Runnable {
 		    	byte[] buffer = new byte[1000];
 		    	int count = 0, rBytes = 0;
 		    	while (rBytes < fileSize) {
+		    		//only if still active
 		    		count = dis.read(buffer);
 		    		fStream.write(buffer, 0, count);
 		    		rBytes += count;
@@ -76,6 +77,7 @@ public class BackgroundThread implements Runnable {
 		    	fStream.close();
 			}
 		} catch (Exception e) {
+			//should delete file if interrupterd?
 			System.out.println(e);
 		}
 	}
@@ -100,7 +102,14 @@ public class BackgroundThread implements Runnable {
 	    		int count = 0;
 
 	    		while((count = fs.read(buffer)) > 0) {
-					dos.write(buffer, 0, count);
+	    			String status = normalIn.readLine();
+	    			//System.out.println("Command status: " + status);
+	    			if (status.equals("running")){
+	    				//System.out.println("writing");
+	    				dos.write(buffer, 0, count);
+	    			} else {
+	    				return;
+	    			}
 				}
 				fs.close();
 			}
