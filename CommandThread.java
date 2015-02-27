@@ -77,18 +77,21 @@ public class CommandThread implements Runnable {
 				is.readLine(); //client sends "send file"
 				byte[] buffer = new byte[1000];
 				//BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
-	    		int count = 0;
-	    		try{
-	    			Thread.sleep(10000);
-	    			while((count = fs.read(buffer)) > 0) {
+	    		int count = 1;
+    			while((count = fs.read(buffer)) > 0) {
+	    			os.println("running");
+	    			is.readLine();
 					dos.write(buffer, 0, count);
-					}
-	    		} catch (InterruptedException terminate){
-	    			fs.close();
-	    			return;
+
+	    			if(Thread.interrupted()){
+		    			os.println("terminate");
+		    			fs.close();
+		    			return;	
+	    			}
 	    		}
-				fs.close();
-				System.out.println("4) completed getFile");
+
+			fs.close();
+			System.out.println("4) completed getFile");
 			}
 		} catch(IOException e) {
 			System.out.println("there was an error getting your file");
@@ -111,19 +114,17 @@ public class CommandThread implements Runnable {
 	    	FileOutputStream fStream = new FileOutputStream(newFile);
 	    	byte[] buffer = new byte[1000];
 	    	int count = 0, rBytes = 0;
-	    	try {
-		    	Thread.sleep(10000);
 		    	while (rBytes < fileSize) {
 		    		os.println("running");
 		    		count = dis.read(buffer);
 		    		fStream.write(buffer, 0, count);
 		    		rBytes += count;
-		    	}	
-	    	} catch (InterruptedException terminate) {
-	    		os.println("terminate");
-	    		fStream.close();
-	    		newFile.delete();
-				return;
+		    	if(Thread.interrupted()){
+			    	os.println("terminate");
+		    		fStream.close();
+		    		newFile.delete();
+					return;
+		    	}
 	    	}
 	    	fStream.close();
 	    	System.out.println("4) completed puteFile");	

@@ -69,10 +69,15 @@ public class BackgroundThread implements Runnable {
 		    	byte[] buffer = new byte[1000];
 		    	int count = 0, rBytes = 0;
 		    	while (rBytes < fileSize) {
-		    		//only if still active
-		    		count = dis.read(buffer);
-		    		fStream.write(buffer, 0, count);
-		    		rBytes += count;
+		    		String status = normalIn.readLine();
+		    		normalOut.println();
+		    		if(status.equals("running")){
+						count = dis.read(buffer);
+						fStream.write(buffer, 0, count);
+						rBytes += count;
+		    		} else {
+		    			return;
+		    		}
 		    	}
 		    	fStream.close();
 			}

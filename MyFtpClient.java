@@ -83,52 +83,84 @@ public class MyFtpClient {
 	}
 
 	public void clientPutFile(String userInput) throws Exception {
-		String fileName = System.getProperty("user.dir") + "/" + userInput.split(" ")[1];
-		normalOut.println(userInput);
-		File file = new File(fileName);
-		//Check if directory exists
-		if (!file.exists()) {
-			System.out.println("ERROR: That file does not exist");
-		} else if (file.exists()) {
-			//receive command ID
-			System.out.println("Put Command ID: " + normalIn.readLine());
-			//send file length
-			normalOut.println((int)file.length());
-			//normalIn.readLine();
-    		int fileSize = (int)file.length();
-    		byte[] buffer = new byte[1000];
-    		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
-    		int count = 0;
+			String fileName = System.getProperty("user.dir") + "/" + userInput.split(" ")[1];
+			normalOut.println(userInput);
+			File file = new File(fileName);
+			//Check if directory exists
+			if (!file.exists()) {
+				System.out.println("ERROR: That file does not exist");
+			} else if (file.exists()) {
+				//receive command ID
+				System.out.println("Put Command ID: " + normalIn.readLine());
+				//send file length
+				normalOut.println((int)file.length());
+	    		int fileSize = (int)file.length();
+	    		byte[] buffer = new byte[1000];
+	    		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
+	    		int count = 0;
 
-    		while((count = fs.read(buffer)) > 0) {
-				dos.write(buffer, 0, count);
+	    		while((count = fs.read(buffer)) > 0) {
+	    			String status = normalIn.readLine();
+	    			if (status.equals("running")){
+	    				dos.write(buffer, 0, count);
+	    			} else {
+	    				return;
+	    			}
+				}
+				fs.close();
 			}
-			fs.close();
-		}
 	}
 
 	public void clientGetFile(String userInput) throws Exception {
-		normalOut.println(userInput);
-		System.out.println("Get Command ID: " + normalIn.readLine());
-		String i = normalIn.readLine();
-		if (i.equals("file does not exist")) {
-			System.out.println("ERROR: That file does not exist");
-			normalOut.println("done");
-		} else if (i.equals("file exists")) {
-			normalOut.println("send file length");
-			int fileSize = Integer.parseInt(normalIn.readLine());
-			normalOut.println("send file");
-			String fileName = userInput.split(" ")[1];
-			FileOutputStream fStream = new FileOutputStream(new File(fileName));
-	    	byte[] buffer = new byte[1000];
-	    	int count = 0, rBytes = 0;
-	    	while (rBytes < fileSize) {
-	    		count = dis.read(buffer);
-	    		fStream.write(buffer, 0, count);
-	    		rBytes += count;
-	    	}
-	    	fStream.close();
-		}
+		// normalOut.println(userInput);
+		// System.out.println("Get Command ID: " + normalIn.readLine());
+		// String i = normalIn.readLine();
+		// if (i.equals("file does not exist")) {
+		// 	System.out.println("ERROR: That file does not exist");
+		// 	normalOut.println("done");
+		// } else if (i.equals("file exists")) {
+		// 	normalOut.println("send file length");
+		// 	int fileSize = Integer.parseInt(normalIn.readLine());
+		// 	normalOut.println("send file");
+		// 	String fileName = userInput.split(" ")[1];
+		// 	FileOutputStream fStream = new FileOutputStream(new File(fileName));
+	 //    	byte[] buffer = new byte[1000];
+	 //    	int count = 0, rBytes = 0;
+	 //    	while (rBytes < fileSize) {
+	 //    		String status = normalIn.readLine();
+	 //    		count = dis.read(buffer);
+	 //    		fStream.write(buffer, 0, count);
+	 //    		rBytes += count;
+	 //    	}
+	 //    	fStream.close();
+		// }
+			normalOut.println(userInput);
+			System.out.println("Get Command ID: " + normalIn.readLine());
+			String i = normalIn.readLine();
+			if (i.equals("file does not exist")) {
+				System.out.println("ERROR: That file does not exist");
+				normalOut.println("done");
+			} else if (i.equals("file exists")) {
+				normalOut.println("send file length");
+				int fileSize = Integer.parseInt(normalIn.readLine());
+				normalOut.println("send file");
+				String fileName = userInput.split(" ")[1];
+				FileOutputStream fStream = new FileOutputStream(new File(fileName));
+		    	byte[] buffer = new byte[1000];
+		    	int count = 0, rBytes = 0;
+		    	while (rBytes < fileSize) {
+		    		String status = normalIn.readLine();
+		    		normalOut.println();
+		    		if(status.equals("running")){
+						count = dis.read(buffer);
+						fStream.write(buffer, 0, count);
+						rBytes += count;
+		    		} else {
+		    			return;
+		    		}
+		    	}
+		    	fStream.close();
+			}
 	}
 
 	/**

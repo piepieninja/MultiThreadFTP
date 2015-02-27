@@ -39,6 +39,7 @@ public class TerminateManager implements Runnable {
 						thread.interrupt();
 					}
 				}
+				socket.close();
 
 			}
 

@@ -104,6 +104,7 @@ public class ClientThread implements Runnable {
 		os.println(commandThread.getId());
 		commandThread.start();
 		try{
+			//commandThread.sleep(5000);
 			commandThread.join();
 		} catch (InterruptedException consumed) {
 			System.out.println("Command thread Interrupted");
