@@ -141,11 +141,13 @@ public class MyFtpClient {
 				System.out.println("ERROR: That file does not exist");
 				normalOut.println("done");
 			} else if (i.equals("file exists")) {
+				System.out.println("The File does exist");
 				normalOut.println("send file length");
 				int fileSize = Integer.parseInt(normalIn.readLine());
 				normalOut.println("send file");
 				String fileName = userInput.split(" ")[1];
-				FileOutputStream fStream = new FileOutputStream(new File(fileName));
+				File f = new File(fileName);
+				FileOutputStream fStream = new FileOutputStream(f);
 		    	byte[] buffer = new byte[1000];
 		    	int count = 0, rBytes = 0;
 		    	while (rBytes < fileSize) {
@@ -156,6 +158,9 @@ public class MyFtpClient {
 						fStream.write(buffer, 0, count);
 						rBytes += count;
 		    		} else {
+		    			System.out.println("You got here yeahhhhh");
+		    			fStream.close();
+		    			f.delete();
 		    			return;
 		    		}
 		    	}

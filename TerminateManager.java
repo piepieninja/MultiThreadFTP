@@ -21,7 +21,7 @@ public class TerminateManager implements Runnable {
 			terminateSocket = new ServerSocket(port);
 
 			while(true){
-			
+				System.out.println("Accetping connection");
 				Socket socket = terminateSocket.accept(); //ServerSocket returns a new socket on an unspecified port Client instantiates one	
 				try {
 					is = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -39,6 +39,7 @@ public class TerminateManager implements Runnable {
 						thread.interrupt();
 					}
 				}
+				System.out.println("Before socket close");
 				socket.close();
 
 			}
