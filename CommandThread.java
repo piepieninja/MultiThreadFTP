@@ -62,23 +62,19 @@ public class CommandThread implements Runnable {
 	*/
 	public void getFile(String fileName){
 		try{
+			is.readLine(); 
 			File file = new File(currentPath + "/" + fileName);
 			BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
 			if (!file.exists()) {
-				os.println("file does not exist");
+				os.println("no file");
+				fs.close();
+				file.delete();
 			} else if (file.exists()) {
-				os.println("file exists");
-			}
-			String i = is.readLine();
-			if (i.equals("done")) {
-				return;
-			} else if (i.equals("send file length")) {
-				os.println((int)file.length());
-				is.readLine(); //client sends "send file"
+				String response = "exists " + file.length();
+				os.println(response);
 				byte[] buffer = new byte[1000];
-				//BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
 	    		int count = 1;
-    			while((count = fs.read(buffer)) > 0) {
+				while((count = fs.read(buffer)) > 0) {
 	    			os.println("running");
 	    			is.readLine();
 					dos.write(buffer, 0, count);
@@ -89,9 +85,8 @@ public class CommandThread implements Runnable {
 		    			return;	
 	    			}
 	    		}
-
-			fs.close();
-			System.out.println("4) completed getFile");
+				fs.close();
+				System.out.println("4) completed getFile");
 			}
 		} catch(IOException e) {
 			System.out.println("there was an error getting your file");
@@ -107,27 +102,28 @@ public class CommandThread implements Runnable {
 	*/
 	private void putFile(String fileName) {
 		try{
-			//os.println("received put command");
-			int fileSize = Integer.parseInt(is.readLine());
-			//os.println("received file size");
-			File newFile = new File(currentPath + "/" + fileName);
-	    	FileOutputStream fStream = new FileOutputStream(newFile);
-	    	byte[] buffer = new byte[1000];
-	    	int count = 0, rBytes = 0;
+			String[] s = is.readLine().split(" ");
+			if (s[0].equals("exists")) {
+				int fileSize = Integer.parseInt(s[1]);
+				File newFile = new File(currentPath + "/" + fileName);
+		    	FileOutputStream fStream = new FileOutputStream(newFile);
+		    	byte[] buffer = new byte[1000];
+		    	int count = 0, rBytes = 0;
 		    	while (rBytes < fileSize) {
+		    		if(Thread.interrupted()){
+				    	os.println("terminate");
+			    		fStream.close();
+			    		newFile.delete();
+						return;
+			    	}
 		    		os.println("running");
 		    		count = dis.read(buffer);
 		    		fStream.write(buffer, 0, count);
 		    		rBytes += count;
-		    	if(Thread.interrupted()){
-			    	os.println("terminate");
-		    		fStream.close();
-		    		newFile.delete();
-					return;
-		    	}
-	    	}
-	    	fStream.close();
-	    	System.out.println("4) completed puteFile");	
+			    }
+		    	fStream.close();
+	    		System.out.println("4) completed Put File");
+	    	}	
 		} catch(IOException e) {
 			System.out.println("INterrupted putting your file");
 			return;
