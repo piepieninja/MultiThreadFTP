@@ -5,6 +5,7 @@ import java.net.*;
 public class MyFtpServer {
 
 	private Thread nThread, tThread;
+	Socket terminateSocket;
 	
 	/**
 	 * The constructor for MyFtpServer, create an instance of an FTP server

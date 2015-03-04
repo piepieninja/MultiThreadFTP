@@ -114,7 +114,6 @@ public class BackgroundThread implements Runnable {
 	    				return;
 	    			}
 				}
-				System.out.println("Put file completed");
 				fs.close();
 			}
 		} catch (Exception e) { 

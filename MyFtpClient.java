@@ -225,11 +225,11 @@ public class MyFtpClient {
 			}
 		} else if (command.equals("quit")) {
 			//close all streams and exit
-			normalIn.close();
-			terminateIn.close();
-			normalOut.close();
-			terminateOut.close();
-			stdIn.close();
+			//normalIn.close();
+			//terminateIn.close();
+			//normalOut.close();
+			//terminateOut.close();
+			//stdIn.close();
 			System.exit(0);
 		}
 	}
@@ -266,14 +266,6 @@ public class MyFtpClient {
 		}
 	}
 
-	/**
-	 * A wonderfull welcom
-	 * @return not AMY
-	 */
-	public static void printHello() {
-		System.out.println(" ___ _____ ___   ___ ___ _____   _____ ___ \n| __|_   _| _ \\ / __| __| _ \\ \\ / / __| _ \\\n| _|  | | |  _/ \\__ \\ _||   /\\ V /| _||   /\n|_|   |_| |_|   |___/___|_|_\\ \\_/ |___|_|_\\\n                                           ");
-	}
-
 	public static void main (String[] args) throws IOException{
 		if (args.length != 3){
 			System.out.println("Please use the correct syntax.\nUSAGE: MyFtpClient <SERVER IP> <NORMAL PORT> <TERMINATION PORT>");
@@ -286,8 +278,6 @@ public class MyFtpClient {
 		String IP = args[0];
 		int nport = Integer.parseInt(args[1]);
 		int tport = Integer.parseInt(args[2]);
-
-		printHello();
 
 		MyFtpClient ftp = new MyFtpClient("localhost", 5555, 5556);
 	}

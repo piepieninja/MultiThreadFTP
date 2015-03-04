@@ -125,7 +125,7 @@ public class CommandThread implements Runnable {
 	    		System.out.println("4) completed Put File");
 	    	}	
 		} catch(IOException e) {
-			System.out.println("INterrupted putting your file");
+			System.out.println("Interrupted putting your file");
 			return;
 		}
 	}
