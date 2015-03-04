@@ -40,7 +40,7 @@ public class ClientThread implements Runnable {
 		try {
 			while (running) {
 				input = is.readLine();
-				System.out.println(input);
+				//System.out.println(input);
 				routeCommand(input);
 			}
 		} catch (IOException ex) {

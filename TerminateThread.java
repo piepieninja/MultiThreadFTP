@@ -26,7 +26,7 @@ public class TerminateThread implements Runnable {
 				}
 			}
     	} catch (Exception e) {
-    		//System.out.println(e + "here");
+    		System.out.println(e);
     	}
     }
 
