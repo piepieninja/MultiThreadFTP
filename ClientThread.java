@@ -164,7 +164,14 @@ public class ClientThread implements Runnable {
      * Checks for a valid command then attempts to delete to that file
      * @param destPath, the file desired to be deleted
      */
-	private void deleteFile(String destPath){
+	private void deleteFile(String destPath) {
+		while (rwLock.writes != 0 && rwLock.reads != 0) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				
+			}
+		}
 		File file = new File(currentPath + "/" + destPath);
 		if (!file.exists()) {
 			os.println("no file");

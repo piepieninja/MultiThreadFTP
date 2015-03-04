@@ -63,7 +63,7 @@ public class CommandThread implements Runnable {
 	* @param destPath, the destination directory
 	*/
 	public synchronized void getFile(String fileName) {
-
+		rwLock.reads++;
 		try{
 			is.readLine(); 
 			File file = new File(currentPath + "/" + fileName);
@@ -91,6 +91,7 @@ public class CommandThread implements Runnable {
 				fs.close();
 				System.out.println("4) completed getFile");
 			}
+			rwLock.reads--;
 		} catch(IOException e) {
 			System.out.println("there was an error getting your file");
 			//fs.close();
