@@ -7,6 +7,7 @@ all:
 	javac BackgroundThread.java
 	javac MyFtpServer.java
 	javac MyFtpClient.java
+	javac RWLock.java
 server:
 	javac MyFtpServer.java
 client:

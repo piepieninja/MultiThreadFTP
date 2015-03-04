@@ -10,6 +10,7 @@ public class CommandThread implements Runnable {
     DataInputStream dis;
     String[] inputs;
     String currentPath;
+    RWLock rwLock;
 
     /**
      * The constructor for the ClientThread class
@@ -17,7 +18,8 @@ public class CommandThread implements Runnable {
      * @param cmd the command being processed by the command thread
      * @return an instance of ClientThread instantiated with the current path and configured IO streams
      */
-	public CommandThread(Socket clientSocket, String[] inputs, String path) {
+	public CommandThread(Socket clientSocket, String[] inputs, String path, RWLock rwLock) {
+		this.rwLock = rwLock;
 		System.out.println("1) created command thread");
 		try {
 			is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -60,7 +62,8 @@ public class CommandThread implements Runnable {
 	* Gets a remote file from the server and gives it to the client
 	* @param destPath, the destination directory
 	*/
-	public void getFile(String fileName){
+	public synchronized void getFile(String fileName) {
+
 		try{
 			is.readLine(); 
 			File file = new File(currentPath + "/" + fileName);
@@ -101,7 +104,17 @@ public class CommandThread implements Runnable {
 	* @param destPath, the destination directory
 	*/
 	private void putFile(String fileName) {
+		while (rwLock.writes != 0) {
+			try {
+				System.out.println("This thread is waiting");
+				wait();
+			} catch (InterruptedException e) {
+				System.out.println("This thread is resuming the write");
+			}
+		}
+
 		try{
+
 			String[] s = is.readLine().split(" ");
 			if (s[0].equals("exists")) {
 				int fileSize = Integer.parseInt(s[1]);
@@ -123,7 +136,9 @@ public class CommandThread implements Runnable {
 			    }
 		    	fStream.close();
 	    		System.out.println("4) completed Put File");
-	    	}	
+	    	}
+	    	rwLock.writes--;
+	    	notifyAll();
 		} catch(IOException e) {
 			System.out.println("Interrupted putting your file");
 			return;

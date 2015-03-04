@@ -14,14 +14,16 @@ public class ClientThread implements Runnable {
     PrintStream os;
     String currentPath;
     boolean running = true;
+    RWLock rwLock;
 
     /**
      * The constructor for the ClientThread class
      * @param clientSocket the socket used to send/recv from 
      * @return an instance of ClientThread instantiated with the current path and configured IO streams
      */
-	public ClientThread(Socket clientSocket) {
+	public ClientThread(Socket clientSocket, RWLock rwLock) {
 		this.mySocket = clientSocket;
+		this.rwLock = rwLock;
 		currentPath = System.getProperty("user.dir");
 		try {
 			is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -99,7 +101,7 @@ public class ClientThread implements Runnable {
 	*/
 	 public void startCommandThread(String[] inputs) {
 	 	System.out.println("Starting command thread");
-		Thread commandThread = new Thread(new CommandThread(this.mySocket, inputs, currentPath));
+		Thread commandThread = new Thread(new CommandThread(this.mySocket, inputs, currentPath, rwLock));
 		System.out.println("2) thread id is " + commandThread.getId());
 		os.println(commandThread.getId());
 		commandThread.start();
