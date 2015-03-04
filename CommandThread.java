@@ -104,6 +104,7 @@ public class CommandThread implements Runnable {
 	* @param destPath, the destination directory
 	*/
 	private void putFile(String fileName) {
+		System.out.println(rwLock.writes);
 		while (rwLock.writes != 0) {
 			try {
 				System.out.println("This thread is waiting");
@@ -112,7 +113,6 @@ public class CommandThread implements Runnable {
 				System.out.println("This thread is resuming the write");
 			}
 		}
-
 		try{
 
 			String[] s = is.readLine().split(" ");
@@ -137,7 +137,9 @@ public class CommandThread implements Runnable {
 		    	fStream.close();
 	    		System.out.println("4) completed Put File");
 	    	}
-	    	rwLock.writes--;
+	    	if (rwLock.writes > 0) {
+	    		rwLock.writes--;
+	    	} 
 	    	notifyAll();
 		} catch(IOException e) {
 			System.out.println("Interrupted putting your file");

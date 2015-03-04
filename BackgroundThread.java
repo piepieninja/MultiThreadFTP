@@ -12,6 +12,7 @@ public class BackgroundThread implements Runnable {
 	PrintWriter normalOut;
 	String[] inputs;
 	int iD;
+	RWLock rwlock;
 
     /**
      * The constructor for the ClientThread class
@@ -21,6 +22,7 @@ public class BackgroundThread implements Runnable {
      */
 	public BackgroundThread(Socket normalSocket, String userInput) {
 		try {
+			this.rwlock = rwlock;
 			is = new BufferedReader(new InputStreamReader(normalSocket.getInputStream()));
 	    	os = new PrintStream(normalSocket.getOutputStream());
 	    	dos = new DataOutputStream(normalSocket.getOutputStream());
@@ -89,7 +91,9 @@ public class BackgroundThread implements Runnable {
 	}
 	
 	public void putFile(String userInput){
-		try{
+
+		try {
+
 			iD = Integer.parseInt(normalIn.readLine());
 			String fileName = System.getProperty("user.dir") + "/" + userInput.split(" ")[1];
 			File file = new File(fileName);
@@ -102,12 +106,14 @@ public class BackgroundThread implements Runnable {
 				int fileSize = (int)file.length();
 				String response = "exists " + fileSize;
 				normalOut.println(response);
+				System.out.println("Right after normalout");
 	    		byte[] buffer = new byte[1000];
 	    		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(file));
 	    		int count = 0;
 
 	    		while((count = fs.read(buffer)) > 0) {
 	    			String status = normalIn.readLine();
+	    			Thread.sleep(5000);
 	    			if (status.equals("running")){
 	    				dos.write(buffer, 0, count);
 	    			} else {
@@ -119,5 +125,6 @@ public class BackgroundThread implements Runnable {
 		} catch (Exception e) { 
 			System.out.println(e);
 		}
+		
 	}
 }

@@ -105,6 +105,7 @@ public class MyFtpClient {
 
 	    		while((count = fs.read(buffer)) > 0) {
 	    			String status = normalIn.readLine();
+	    			Thread.sleep(5000);
 	    			if (status.equals("running")){
 	    				dos.write(buffer, 0, count);
 	    			} else {
