@@ -64,6 +64,16 @@ public class CommandThread implements Runnable {
 	*/
 	public synchronized void getFile(String fileName) {
 		rwLock.reads++;
+
+		while (rwLock.writes != 0) {
+			try {
+				System.out.println("This thread is waiting");
+				wait();
+			} catch (InterruptedException e) {
+				System.out.println("This thread is resuming the write");
+			}
+		}
+
 		try{
 			is.readLine(); 
 			File file = new File(currentPath + "/" + fileName);
@@ -92,6 +102,7 @@ public class CommandThread implements Runnable {
 				System.out.println("4) completed getFile");
 			}
 			rwLock.reads--;
+			notifyAll();
 		} catch(IOException e) {
 			System.out.println("there was an error getting your file");
 			//fs.close();
@@ -106,7 +117,7 @@ public class CommandThread implements Runnable {
 	*/
 	private void putFile(String fileName) {
 		System.out.println(rwLock.writes);
-		while (rwLock.writes != 0) {
+		while (rwLock.writes != 0 && rwLock.reads != 0) {
 			try {
 				System.out.println("This thread is waiting");
 				wait();
